@@ -9,8 +9,9 @@
     <style>
         body {
             font-family: 'Heebo', sans-serif;
-            background-color: #000;
-            color: white;
+            background: url('/mnt/data/Untitled-1 (1).jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: black;
             direction: rtl;
             text-align: center;
             margin: 0;
@@ -20,7 +21,7 @@
         #rashi {
             font-family: 'Noto Rashi Hebrew', sans-serif;
             font-size: 32px;
-            color: #f1a349;
+            color: black;
             margin-top: 20px;
         }
 
@@ -29,7 +30,7 @@
         }
 
         #fetch-button {
-            background-color: #f1a349;
+            background-color: black;
             color: white;
             padding: 10px 20px;
             font-size: 16px;
@@ -40,41 +41,37 @@
         }
 
         #fetch-button:hover {
-            background-color: #d88a2f;
+            background-color: grey;
         }
 
         #loading {
             font-size: 20px;
-            color: #f1a349;
+            color: black;
             display: none;
         }
 
         #people-container {
             display: none;
             margin-top: 20px;
-        }
-
-        h3 {
-            color: #f1a349;
-            font-size: 24px;
-            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-around;
         }
 
         .people-column {
             display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            margin-top: 10px;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
         }
 
         .person {
-            background-color: #fff;
+            background-color: white;
             padding: 15px;
             margin: 10px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            text-align: right;
+            width: 250px;
+            text-align: center;
         }
 
         .person p {
@@ -82,7 +79,7 @@
         }
 
         .person strong {
-            color: #f1a349;
+            color: black;
         }
     </style>
 </head>
@@ -92,39 +89,27 @@
         <button id="fetch-button" onclick="fetchPeople()">לחץ/י לקבלת רשימת אנשים</button>
         <div id="loading">טוען...</div>
 
-        <!-- Container for displaying people information -->
         <div id="people-container">
-            <h3>אנשים מארצות הברית:</h3>
             <div id="us-people" class="people-column"></div>
-
-            <h3>אנשים מצרפת:</h3>
             <div id="france-people" class="people-column"></div>
-
-            <h3>אנשים מסין:</h3>
             <div id="china-people" class="people-column"></div>
         </div>
     </div>
 
     <script>
-        // פונקציה לשליחה ל-Webhook ולקבלת נתונים
         function fetchPeople() {
             const loadingElement = document.getElementById("loading");
-            loadingElement.style.display = "block";  // הצג את הודעת הטעינה
+            loadingElement.style.display = "block";
 
-            // שלח בקשה ל-Webhook שלך
             fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    request: 'fetch_people',
-                }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ request: 'fetch_people' }),
             })
-            .then(response => response.json())  // Assuming JSON response
+            .then(response => response.json())
             .then(data => {
-                loadingElement.style.display = "none";  // הסתר את הודעת הטעינה
-                displayPeople(data);  // הצג את המידע
+                loadingElement.style.display = "none";
+                displayPeople(data);
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
@@ -133,31 +118,26 @@
             });
         }
 
-        // פונקציה להצגת המידע הממוין לפי מדינות
         function displayPeople(data) {
             const usPeople = data.filter(person => person[0] === "USA");
             const francePeople = data.filter(person => person[0] === "FRANCE");
             const chinaPeople = data.filter(person => person[0] === "CHINA");
 
-            // הצגת המידע עבור כל מדינה
             document.getElementById("us-people").innerHTML = generatePeopleHTML(usPeople);
             document.getElementById("france-people").innerHTML = generatePeopleHTML(francePeople);
             document.getElementById("china-people").innerHTML = generatePeopleHTML(chinaPeople);
 
-            document.getElementById("people-container").style.display = "block";  // הצג את המידע
+            document.getElementById("people-container").style.display = "flex";
         }
 
-        // פונקציה ליצירת HTML עבור כל קבוצה של אנשים
         function generatePeopleHTML(people) {
-            return people.map(person => {
-                return `
-                    <div class="person">
-                        <p><strong>שם:</strong> ${person[2]}</p>
-                        <p><strong>מספר זיהוי:</strong> ${person[1]}</p>
-                        <p><strong>סכום:</strong> ${person[3]} ₪</p>
-                    </div>
-                `;
-            }).join('');
+            return people.map(person => `
+                <div class="person">
+                    <p><strong>שם:</strong> ${person[2]}</p>
+                    <p><strong>מספר זיהוי:</strong> ${person[1]}</p>
+                    <p><strong>סכום:</strong> ${person[3]} ₪</p>
+                </div>
+            `).join('');
         }
     </script>
 </body>
