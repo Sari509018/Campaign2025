@@ -139,13 +139,26 @@
             display: flex;
             justify-content: space-between;
         }
+
+        .person-name {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .person-info {
+            font-size: 18px;
+        }
+
+        .person-info p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
     <p id="rashi">"מי ימלל גבורות יהוה ישמיע כל תהילתו"</p>
     <div id="content-wrapper">
         <div class="header">
-            <p>בר התקדמות: <span id="global-progress-text">0 מתוך 150000</span></p>
+            <p>בר התקדמות: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
         </div>
 
         <div class="global-progress-bar">
@@ -243,8 +256,10 @@
         function generatePeopleHTML(people, target) {
             return people.map(person => `
                 <div class="person">
-                    <div class="person-details">
-                        <p><strong>שם:</strong> ${person[2]}</p>
+                    <div class="person-name">
+                        <strong>${person[2]}</strong>
+                    </div>
+                    <div class="person-info">
                         <p><strong>סכום:</strong> ${person[3]} ₪</p>
                         <p><strong>יעד:</strong> ${person[4]} ₪</p>
                     </div>
@@ -277,6 +292,7 @@
 
             document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
             document.getElementById("global-progress-text").textContent = `${globalTotal} מתוך ${globalTarget}`;
+            document.getElementById("global-progress-percentage").textContent = `${Math.min(progressWidth, 100).toFixed(2)}%`;
         }
     </script>
 </body>
