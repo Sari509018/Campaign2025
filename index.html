@@ -90,9 +90,9 @@
 
         .progress-bar {
             width: 100%;
-            height: 10px;
-            background-color: lightgray;
+            background-color: #f0f0f0;
             border-radius: 5px;
+            height: 20px;
             margin-top: 10px;
         }
 
@@ -147,40 +147,49 @@
 
             Object.keys(countries).forEach(country => {
                 const people = data.filter(person => person[0] === country);
-                let totalAmount = people.find(person => person[1] === "0");
-                const target = totalAmount ? totalAmount[4] : 1800; // היעד נמצא ב-indice 4
+                const totalAmount = people.find(person => person[1] === 0);
+                let target = 0;
+                let countryData = '';
+                if (totalAmount) {
+                    target = totalAmount[4];
+                    countryData = totalAmount[2];
+                    countryData += ` - יעד: ${target}`;
+                }
                 let content = "";
-
+                
                 if (people.length > 0) {
                     content += `<h3>אנשים מ${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
-                    if (totalAmount) {
-                        const percentage = ((totalAmount[3] / target) * 100).toFixed(2);
-                        content += `<h4>סכום כולל: ${totalAmount[3]} ₪ (${percentage}% מתוך ${target} ₪)</h4>`;
+                    if (target) {
+                        content += `<h4>${countryData}</h4>`;
                     }
-                    content += generatePeopleHTML(people.filter(person => person[1] !== "0"), target);
+                    content += generatePeopleHTML(people.filter(person => person[1] !== 0), target);
                 }
-
+                
                 document.getElementById(countries[country]).innerHTML = content;
             });
-
+            
             document.getElementById("people-container").style.display = "flex";
         }
 
         function generatePeopleHTML(people, target) {
-            return people.map(person => {
-                const percentage = ((person[3] / target) * 100).toFixed(2);
-                return `
-                    <div class="person">
-                        <p><strong>שם:</strong> ${person[2]}</p>
-                        <p><strong>מספר זיהוי:</strong> ${person[1]}</p>
-                        <p><strong>סכום:</strong> ${person[3]} ₪</p>
-                        <div class="progress-bar">
-                            <div class="progress" style="width: ${percentage}%"></div>
-                        </div>
-                        <p>${percentage}% מתוך ${target} ₪</p>
-                    </div>
-                `;
-            }).join('');
+            return people.map(person => `
+                <div class="person">
+                    <p><strong>שם:</strong> ${person[2]}</p>
+                    <p><strong>מספר זיהוי:</strong> ${person[1]}</p>
+                    <p><strong>סכום:</strong> ${person[3]} ₪</p>
+                    ${generateProgressBar(person[3], target)}
+                </div>
+            `).join('');
+        }
+
+        function generateProgressBar(amount, target) {
+            if (!target) return '';
+            const progressWidth = (amount / target) * 100;
+            return `
+                <div class="progress-bar">
+                    <div class="progress" style="width: ${progressWidth}%"></div>
+                </div>
+            `;
         }
     </script>
 </body>
