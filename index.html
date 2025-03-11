@@ -147,8 +147,8 @@
 
             Object.keys(countries).forEach(country => {
                 const people = data.filter(person => person[0] === country);
-                const totalAmount = people.find(person => person[1] === 0);
-                const target = 10000; // יעד לדוגמה
+                let totalAmount = people.find(person => person[1] === "0");
+                const target = totalAmount ? totalAmount[4] : 1800; // היעד נמצא ב-indice 4
                 let content = "";
 
                 if (people.length > 0) {
@@ -157,7 +157,7 @@
                         const percentage = ((totalAmount[3] / target) * 100).toFixed(2);
                         content += `<h4>סכום כולל: ${totalAmount[3]} ₪ (${percentage}% מתוך ${target} ₪)</h4>`;
                     }
-                    content += generatePeopleHTML(people.filter(person => person[1] !== 0), target);
+                    content += generatePeopleHTML(people.filter(person => person[1] !== "0"), target);
                 }
 
                 document.getElementById(countries[country]).innerHTML = content;
