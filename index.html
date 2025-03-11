@@ -272,9 +272,15 @@
             if (!target || target === 0) {
                 return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
             }
+
             const progressWidth = (amount / target) * 100;
+            const maxBarWidth = 300;  // Width of the bar when the target is the largest.
+
+            // Calculate the proportional width based on the target
+            const barWidth = (target / 150000) * maxBarWidth;
+
             return `
-                <div class="progress-bar">
+                <div class="progress-bar" style="width: ${barWidth}px;">
                     <div class="progress" style="width: ${Math.min(progressWidth, 100)}%"></div>
                 </div>
                 <div class="progress-text">${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג</div>
