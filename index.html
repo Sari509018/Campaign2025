@@ -107,11 +107,21 @@
             color: black;
             margin-top: 5px;
         }
+
+        .header {
+            font-size: 30px;
+            color: black;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <p id="rashi">"מי ימלל גבורות יהוה ישמיע כל תהילתו"</p>
     <div id="content-wrapper">
+        <div class="header">
+            <p>בר התקדמות: 15000 מתוך 150000</p>
+            <p>כותרת ראשונה כאן</p>
+        </div>
         <button id="fetch-button" onclick="fetchPeople()">לחץ/י לקבלת רשימת אנשים</button>
         <div id="loading">טוען...</div>
 
@@ -203,6 +213,7 @@
                     <p><strong>שם:</strong> ${person[2]}</p>
                     <p><strong>מספר זיהוי:</strong> ${person[1]}</p>
                     <p><strong>סכום:</strong> ${person[3]} ₪</p>
+                    <p><strong>יעד:</strong> ${person[4]} ₪</p>
                     ${generateProgressBar(person[3], person[4])}
                 </div>
             `).join('');
