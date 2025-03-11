@@ -277,17 +277,23 @@ function generateProgressBar(amount, target) {
     const progressWidth = (amount / target) * 100;
     const minBarWidth = 1000;  // רוחב מינימלי של הבר (1000 פיקסלים)
     const maxBarWidth = 50000; // רוחב מקסימלי של הבר (50000 פיקסלים)
+    const minHeight = 20; // גובה מינימלי של הבר (20 פיקסלים)
+    const maxHeight = 200; // גובה מקסימלי של הבר (200 פיקסלים)
 
     // חישוב רוחב הבר על פי היעד, כך שהרוחב יהיה בין 1000 ל-50000
     const barWidth = Math.min(minBarWidth + (target / 50000) * (maxBarWidth - minBarWidth), maxBarWidth);
 
+    // חישוב גובה הבר על פי היעד, כך שהגובה יהיה בין 20 ל-200 פיקסלים
+    const barHeight = Math.min(minHeight + (amount / target) * (maxHeight - minHeight), maxHeight);
+
     return `
-        <div class="progress-bar" style="width: ${barWidth}px;">
-            <div class="progress" style="width: ${Math.min(progressWidth, 100)}%"></div>
+        <div class="progress-bar" style="width: ${barWidth}px; height: ${barHeight}px;">
+            <div class="progress" style="width: ${Math.min(progressWidth, 100)}%;"></div>
         </div>
         <div class="progress-text">${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג</div>
     `;
 }
+
 
 
         function updateGlobalProgress(data) {
