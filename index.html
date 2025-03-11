@@ -194,7 +194,9 @@
         }
 
         function generateProgressBar(amount, target) {
-            if (!target) return '';
+            if (!target || target === 0) {
+                return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
+            }
             const progressWidth = (amount / target) * 100;
             return `
                 <div class="progress-bar">
