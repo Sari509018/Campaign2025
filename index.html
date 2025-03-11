@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #020308;
             font-family: 'Heebo', sans-serif;
             background: url('/mnt/data/Untitled-1 (1).jpg') no-repeat center center fixed;
             background-size: cover;
@@ -42,7 +41,7 @@
         }
 
         #fetch-button:hover {
-            background-color: #fcc140;
+            background-color: grey;
         }
 
         #loading {
@@ -244,7 +243,7 @@
                         totalAmount = parseInt(chinaData);
                     }
 
-                    content += `<h4>סכום כולל: ${totalAmount} ₪</h4>`;
+                    content += `<h4>סכום כולל: ${formatNumber(totalAmount)} ₪</h4>`;
                     content += generatePeopleHTML(people.filter(person => person[1] !== "0"), totalAmount);
                 }
 
@@ -261,36 +260,33 @@
                         <strong>${person[2]}</strong>
                     </div>
                     <div class="person-info">
-                        <p><strong>סכום:</strong> ${person[3]} ₪</p>
-                        <p><strong>יעד:</strong> ${person[4]} ₪</p>
+                        <p><strong>סכום:</strong> ${formatNumber(person[3])} ₪</p>
+                        <p><strong>יעד:</strong> ${formatNumber(person[4])} ₪</p>
                     </div>
                     ${generateProgressBar(person[3], person[4])}
                 </div>
             `).join('');
         }
 
-function generateProgressBar(amount, target) {
-    if (!target || target === 0) {
-        return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
-    }
+        function generateProgressBar(amount, target) {
+            if (!target || target === 0) {
+                return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
+            }
 
-    const progressWidth = (amount / target) * 100;
-    const barWidth = 200;  // רוחב קבוע של הבר (300 פיקסלים)
-    const barHeight = 15;  // גובה קבוע של הבר (20 פיקסלים)
+            const progressWidth = (amount / target) * 100;
+            const barWidth = 300;  // רוחב קבוע של הבר (300 פיקסלים)
 
-    return `
-        <div class="progress-bar" style="width: ${barWidth}px; height: ${barHeight}px;">
-            <div class="progress" style="width: ${Math.min(progressWidth, 100)}%;"></div>
-        </div>
-        <div class="progress-text">${formatNumber(amount)} ₪ מתוך ${formatNumber(target)} ₪ (${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג)</div>
-    `;
-}
+            return `
+                <div class="progress-bar" style="width: ${barWidth}px;">
+                    <div class="progress" style="width: ${Math.min(progressWidth, 100)}%;"></div>
+                </div>
+                <div class="progress-text">${formatNumber(amount)} ₪ מתוך ${formatNumber(target)} ₪ (${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג)</div>
+            `;
+        }
 
-function formatNumber(number) {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-
+        function formatNumber(number) {
+            return number.toLocaleString('en'); // יוסיף פסיקים כל אלף
+        }
 
         function updateGlobalProgress(data) {
             globalTotal = data.reduce((acc, person) => {
@@ -302,8 +298,8 @@ function formatNumber(number) {
             const progressWidth = (globalTotal / globalTarget) * 100;
 
             document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
-            document.getElementById("global-progress-text").textContent = `${globalTotal} מתוך ${globalTarget}`;
-            document.getElementById("global-progress-percentage").textContent = `${Math.min(progressWidth, 100).toFixed(2)}%`;
+            document.getElementById("global-progress-text").innerText = `${formatNumber(globalTotal)} ₪ מתוך ${formatNumber(globalTarget)} ₪`;
+            document.getElementById("global-progress-percentage").innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
         }
     </script>
 </body>
