@@ -42,7 +42,7 @@
         }
 
         #fetch-button:hover {
-            background-color: grey;
+            background-color: #fcc140;
         }
 
         #loading {
@@ -275,8 +275,8 @@ function generateProgressBar(amount, target) {
     }
 
     const progressWidth = (amount / target) * 100;
-    const barWidth = 300;  // רוחב קבוע של הבר (300 פיקסלים)
-    const barHeight = 20;  // גובה קבוע של הבר (20 פיקסלים)
+    const barWidth = 200;  // רוחב קבוע של הבר (300 פיקסלים)
+    const barHeight = 15;  // גובה קבוע של הבר (20 פיקסלים)
 
     return `
         <div class="progress-bar" style="width: ${barWidth}px; height: ${barHeight}px;">
