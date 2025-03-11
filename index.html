@@ -158,7 +158,7 @@
     <p id="rashi">"מי ימלל גבורות יהוה ישמיע כל תהילתו"</p>
     <div id="content-wrapper">
         <div class="header">
-            <p>הסכום שנאסף עד כה: <span id="global-progress-text">0 ₪</span> <small>מתוך יעד של 150,000 ₪</small></p>
+            <p>בר התקדמות: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
         </div>
 
         <div class="global-progress-bar">
@@ -177,7 +177,6 @@
 
     <script>
         let globalTotal = 0;
-        const globalTarget = 150000; // יעד גלובלי
 
         function fetchPeople() {
             const loadingElement = document.getElementById("loading");
@@ -212,6 +211,7 @@
             let usaData = '', franceData = '', chinaData = '';
             let totalUSA = 0, totalFrance = 0, totalChina = 0;
 
+            // Extract data from summary row
             if (summaryData) {
                 const summary = summaryData[1].split(' ');
                 summary.forEach(entry => {
@@ -222,14 +222,17 @@
                 });
             }
 
+            // Iterate over countries and fill data for each
             Object.keys(countries).forEach(country => {
                 const people = data.filter(person => person[0] === country);
                 let content = "";
+                let target = 0;
                 let totalAmount = 0;
 
                 if (people.length > 0) {
                     content += `<h3>אנשים מ${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
 
+                    // Check for a summary of the country total amount
                     if (country === "USA" && usaData) {
                         totalAmount = parseInt(usaData);
                     }
@@ -271,7 +274,7 @@
             }
 
             const progressWidth = (amount / target) * 100;
-            const barWidth = 300;
+            const barWidth = 300;  // רוחב קבוע של הבר (300 פיקסלים)
 
             return `
                 <div class="progress-bar" style="width: ${barWidth}px;">
@@ -282,7 +285,7 @@
         }
 
         function formatNumber(number) {
-            return number.toLocaleString('he'); // הוספת פסיקים להפרדה בין אלפים
+            return number.toLocaleString('en'); // יוסיף פסיקים כל אלף
         }
 
         function updateGlobalProgress(data) {
@@ -291,11 +294,21 @@
                 return acc;
             }, 0);
 
+            const globalTarget = 150000;
             const progressWidth = (globalTotal / globalTarget) * 100;
 
-            document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
-            document.getElementById("global-progress-text").innerText = `${formatNumber(globalTotal)} ₪`;
-            document.getElementById("global-progress-percentage").innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
+            // בדוק אם האלמנטים קיימים לפני שמבצע את העדכון
+            const globalProgressElement = document.getElementById("global-progress");
+            const globalProgressTextElement = document.getElementById("global-progress-text");
+            const globalProgressPercentageElement = document.getElementById("global-progress-percentage");
+
+            if (globalProgressElement && globalProgressTextElement && globalProgressPercentageElement) {
+                globalProgressElement.style.width = `${Math.min(progressWidth, 100)}%`;
+                globalProgressTextElement.innerText = `${formatNumber(globalTotal)} ₪ מתוך ${formatNumber(globalTarget)} ₪`;
+                globalProgressPercentageElement.innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
+            } else {
+                console.error("One or more elements are missing in the DOM.");
+            }
         }
     </script>
 </body>
