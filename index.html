@@ -9,8 +9,9 @@
     <style>
         body {
             font-family: 'Heebo', sans-serif;
-            background-color: #0044cc; /* כחול */
-            color: white;
+            background: url('/mnt/data/Untitled-1 (1).jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: black;
             direction: rtl;
             text-align: center;
             margin: 0;
@@ -20,7 +21,7 @@
         #rashi {
             font-family: 'Noto Rashi Hebrew', sans-serif;
             font-size: 32px;
-            color: white;
+            color: black;
             margin-top: 20px;
         }
 
@@ -29,7 +30,7 @@
         }
 
         #fetch-button {
-            background-color: #ff6600; /* כתום */
+            background-color: black;
             color: white;
             padding: 10px 20px;
             font-size: 16px;
@@ -40,12 +41,12 @@
         }
 
         #fetch-button:hover {
-            background-color: #cc5200; /* כתום כהה */
+            background-color: grey;
         }
 
         #loading {
             font-size: 20px;
-            color: white;
+            color: black;
             display: none;
         }
 
@@ -64,13 +65,13 @@
         }
 
         .people-column h3 {
-            color: white;
+            color: black;
             font-size: 24px;
             margin-bottom: 10px;
         }
 
         .person {
-            background-color: #003366; /* כחול כהה */
+            background-color: white;
             padding: 15px;
             margin: 10px;
             border-radius: 5px;
@@ -84,7 +85,7 @@
         }
 
         .person strong {
-            color: #ff6600; /* כתום */
+            color: black;
         }
 
         .progress-bar {
@@ -97,19 +98,19 @@
 
         .progress {
             height: 100%;
-            background-color: #ff6600; /* כתום */
+            background-color: green;
             border-radius: 5px;
         }
 
         .progress-text {
             font-size: 12px;
-            color: white;
+            color: black;
             margin-top: 5px;
         }
 
         .header {
             font-size: 30px;
-            color: white;
+            color: black;
             margin-top: 20px;
         }
 
@@ -123,13 +124,13 @@
 
         .global-progress {
             height: 100%;
-            background-color: #ff6600; /* כתום */
+            background-color: green;
             border-radius: 5px;
         }
 
         .global-progress-text {
             font-size: 14px;
-            color: white;
+            color: black;
             text-align: center;
             line-height: 30px;
         }
@@ -296,4 +297,9 @@
             const progressWidth = (globalTotal / globalTarget) * 100;
 
             document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
-            document.getElement
+            document.getElementById("global-progress-text").textContent = `${globalTotal} מתוך ${globalTarget}`;
+            document.getElementById("global-progress-percentage").textContent = `${Math.min(progressWidth, 100).toFixed(2)}%`;
+        }
+    </script>
+</body>
+</html>
