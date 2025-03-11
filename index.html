@@ -18,67 +18,71 @@
       margin: 0;
       padding: 0;
     }
-
-    /* הלוגו יהיה למעלה בצד, קטן וממוקם בקצה */
+    /* מיקום הלוגו – בצד שמאל למעלה */
     #logo-container {
       position: absolute;
       top: 10px;
-      right: 10px;
+      left: 10px;
     }
-
     #logo {
       height: 50px;
     }
-
-    /* הסתרת כל התוכן עד שהנתונים יגיעו */
+    /* תוכן הדף מוסתר עד שהנתונים נטענים */
     #content-wrapper {
       display: none;
       padding: 20px;
+      position: relative;
+      z-index: 1;
     }
-
-    #fetch-button {
-      background-color: #fdd25e;
+    /* כותרת עליונה עם הלוגו, טקסט והכפתור של הרענון */
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .header-text {
+      font-size: 30px;
       color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
+    }
+    /* כפתור רענון – הסרת רקע וקווים, והחלפת הטקסט בסמל */
+    #fetch-button {
+      background: none;
       border: none;
-      border-radius: 5px;
-      margin-top: 20px;
+      cursor: pointer;
     }
-
-    #fetch-button:hover {
-      background-color: grey;
+    #fetch-button svg {
+      fill: white;
+      width: 30px;
+      height: 30px;
     }
-
+    #fetch-button:hover svg {
+      fill: grey;
+    }
+    /* הודעת טעינה */
     #loading {
       font-size: 20px;
       color: black;
-      /* נרצה להציג את הודעת הטעינה עד שהכל נטען */
       display: block;
     }
-
+    /* מיכל האנשים מוסתר עד לטעינת הנתונים */
     #people-container {
-      /* הסתרת תיבת הפרטים עד להגעה של הנתונים */
       display: none;
       margin-top: 20px;
       display: flex;
       justify-content: space-between;
     }
-
     .people-column {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 32%;
     }
-
     .people-column h3 {
       color: white;
       font-size: 24px;
       margin-bottom: 10px;
     }
-
     .person {
       background-color: #4a6a93;
       padding: 15px;
@@ -87,27 +91,22 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       width: 100%;
       text-align: center;
-      /* בהמשך נעדכן: הטקסט שבפנים יהיה שחור (בשורות שמציגות את הפרטים) */
       color: white;
     }
-
     .person-name {
       font-size: 20px;
-      color: black; /* שם האדם יהיה בשחור */
+      color: black;
       margin-bottom: 5px;
     }
-
     .person-info {
       font-size: 18px;
-      color: black; /* הסכום והיעד יהיו בשחור */
+      color: black;
     }
-
     .person-info .amount,
     .person-info .target {
       display: inline-block;
       width: 45%;
     }
-
     .progress-bar {
       width: 100%;
       background-color: #f0f0f0;
@@ -115,25 +114,16 @@
       height: 20px;
       margin-top: 10px;
     }
-
     .progress {
       height: 100%;
       background-color: green;
       border-radius: 5px;
     }
-
     .progress-text {
       font-size: 12px;
       color: black;
       margin-top: 5px;
     }
-
-    .header {
-      font-size: 30px;
-      color: white;  /* כותרות יהיו לבנות */
-      margin-top: 20px;
-    }
-
     .global-progress-bar {
       width: 100%;
       background-color: #f0f0f0;
@@ -141,15 +131,13 @@
       height: 30px;
       margin-top: 20px;
     }
-
     .global-progress {
       height: 100%;
       background-color: green;
       border-radius: 5px;
     }
-
     .global-progress-text {
-      font-size: 5px;
+      font-size: 10px;
       color: black;
       text-align: center;
       line-height: 30px;
@@ -157,23 +145,27 @@
   </style>
 </head>
 <body>
-  <!-- הלוגו יופיע רק לאחר שהנתונים נטענו (כיוון שהוא בתוך content-wrapper) -->
   <div id="content-wrapper">
-    <div id="logo-container">
-
-      <img id="logo" src="images/logo.png" alt="Logo">
-    </div>
-    <div class="header">
-      <p>נאסף עד כה: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
+    <div id="header">
+      <div id="logo-container">
+        <!-- עדכני את הנתיב לקובץ הלוגו שלך -->
+        <img id="logo" src="images/logo.png" alt="Logo">
+      </div>
+      <div class="header-text">
+        <p>נאסף עד כה: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
+      </div>
+      <button id="fetch-button" onclick="fetchPeople()" aria-label="רענון">
+        <!-- סמל רענון באמצעות SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 1 .908-.418A4 4 0 1 0 8 4V1.5a.5.5 0 0 1 1 0V4a.5.5 0 0 1-.5.5H5a.5.5 0 0 1 0-1h3z"/>
+        </svg>
+      </button>
     </div>
 
     <div class="global-progress-bar">
       <div id="global-progress" class="global-progress" style="width: 0%;"></div>
     </div>
-
-    <button id="fetch-button" onclick="fetchPeople()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 16 16"></button>
     <div id="loading">טוען...</div>
-
     <div id="people-container">
       <div id="us-people" class="people-column"></div>
       <div id="france-people" class="people-column"></div>
@@ -188,7 +180,7 @@
       const loadingElement = document.getElementById("loading");
       loadingElement.style.display = "block";
 
-      // הסתרת תכולת ה- content-wrapper עד להגעה של הנתונים
+      // הסתרת כל התוכן עד שהנתונים יגיעו
       document.getElementById("content-wrapper").style.display = "none";
 
       fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
@@ -199,7 +191,7 @@
       .then(response => response.json())
       .then(data => {
         loadingElement.style.display = "none";
-        // לאחר קבלת הנתונים, הציגי את כל התוכן
+        // לאחר קבלת הנתונים, הצגת כל התוכן
         document.getElementById("content-wrapper").style.display = "block";
         displayPeople(data);
         updateGlobalProgress(data);
@@ -239,15 +231,9 @@
         if (people.length > 0) {
           content += `<h3>${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
 
-          if (country === "USA" && usaData) {
-            totalAmount = parseInt(usaData);
-          }
-          if (country === "FRANCE" && franceData) {
-            totalAmount = parseInt(franceData);
-          }
-          if (country === "CHINA" && chinaData) {
-            totalAmount = parseInt(chinaData);
-          }
+          if (country === "USA" && usaData) { totalAmount = parseInt(usaData); }
+          if (country === "FRANCE" && franceData) { totalAmount = parseInt(franceData); }
+          if (country === "CHINA" && chinaData) { totalAmount = parseInt(chinaData); }
 
           content += `<h4>סכום כולל: ${formatNumber(totalAmount)} ₪</h4>`;
           content += generatePeopleHTML(people.filter(person => person[1] !== "0"), totalAmount);
@@ -278,7 +264,6 @@
       if (!target || target === 0) {
         return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
       }
-
       const progressWidth = (amount / target) * 100;
       return `
         <div class="progress-bar">
