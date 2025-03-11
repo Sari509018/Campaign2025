@@ -169,11 +169,12 @@
   <div id="logo-container" onclick="startFetching()">
     <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
   </div>
+    <div id="loading">נטען...</div>
 </div>
 
 
   <!-- הודעת טעינה -->
-  <div id="loading">נטען...</div>
+
   
   <!-- תוכן ראשי – יופיע לאחר טעינת הנתונים -->
   <div id="content-wrapper">
@@ -202,9 +203,12 @@
     
     // הפונקציה שמופעלת בלחיצה על הכפתור הראשוני
     function startFetching() {
-      document.getElementById("initial-state").style.display = "none";
       document.getElementById("loading").style.display = "block";
-      fetchPeople();
+      document.getElementById("initial-state").style.display = "none";
+  document.getElementById("logo-container").style.display = "none";
+  fetchPeople();
+}
+
     }  
     function fetchPeople() {
       fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
@@ -214,15 +218,19 @@
       })
       .then(response => response.json())
       .then(data => {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("content-wrapper").style.display = "block";
+
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("initial-state").style.display = "none";
+  document.getElementById("content-wrapper").style.display = "block";
+  document.getElementById("fixed-logo").style.display = "block";
         displayPeople(data);
         updateGlobalProgress(data);
       })
       .catch(error => {
-        console.error("Error fetching data:", error);
-        document.getElementById("loading").style.display = "none";
-        alert("שגיאה בטעינת המידע");
+  console.error("Error fetching data:", error);
+  document.getElementById("loading").innerText = "שגיאה בטעינת המידע";
+});
+
       });
     }
     
