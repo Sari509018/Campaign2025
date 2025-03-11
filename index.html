@@ -137,7 +137,7 @@
       width: 100%;
       background-color: #f0f0f0;
       border-radius: 5px;
-      height: 20px;
+      height: 15px;
       margin-top: 10px;
     }
     .progress {
@@ -155,7 +155,7 @@
 <body>
   <!-- מצב אתחולי: מוצג רק כפתור רענון גדול במרכז -->
   <div id="initial-state">
-    <button id="start-button" onclick="startFetching()" aria-label="רענן">
+    <button id="start-button" onclick="startFetching()">
 רענן נתונים
     </button>
   </div>
@@ -291,14 +291,15 @@
       return parseInt(number).toLocaleString('en');
     }
     
-    function updateGlobalProgress(data) {
-      const globalTarget = 150000;
+     function updateGlobalProgress(data) {
+      const globalTarget = 15000;
       const totalAll = parseInt(allData) || 0;
       const progressWidth = (totalAll / globalTarget) * 100;
-      document.getElementById("global-progress-text").innerText = formatNumber(totalAll);
+      document.getElementById("global-progress-text").innerText = formatNumber(totalAll) + " ₪";
       document.getElementById("global-progress-percentage").innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
       document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
     }
+
   </script>
 </body>
 </html>
