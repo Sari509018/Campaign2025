@@ -10,6 +10,7 @@
         body {
             font-family: 'Heebo', sans-serif;
             background: url('/mnt/data/Untitled-1 (1).jpg') no-repeat center center fixed;
+            background-color: #000000;
             background-size: cover;
             color: black;
             direction: rtl;
@@ -30,7 +31,7 @@
         }
 
         #fetch-button {
-            background-color: black;
+            background-color: #fdd25e;
             color: white;
             padding: 10px 20px;
             font-size: 16px;
@@ -129,7 +130,7 @@
         }
 
         .global-progress-text {
-            font-size: 14px;
+            font-size: 10px;
             color: black;
             text-align: center;
             line-height: 30px;
@@ -155,17 +156,17 @@
     </style>
 </head>
 <body>
-    <p id="rashi">"מי ימלל גבורות יהוה ישמיע כל תהילתו"</p>
+    <p id="rashi">"ישיבת באר התלמוד בויאר פורים תשפ"ה"</p>
     <div id="content-wrapper">
         <div class="header">
-            <p>בר התקדמות: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
+            <p>נאסף עד כה: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
         </div>
 
         <div class="global-progress-bar">
             <div id="global-progress" class="global-progress" style="width: 0%;"></div>
         </div>
 
-        <button id="fetch-button" onclick="fetchPeople()">לחץ/י לקבלת רשימת אנשים</button>
+        <button id="fetch-button" onclick="fetchPeople()">לחץ לעדכון</button>
         <div id="loading">טוען...</div>
 
         <div id="people-container">
@@ -230,7 +231,7 @@
                 let totalAmount = 0;
 
                 if (people.length > 0) {
-                    content += `<h3>אנשים מ${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
+                    content += `<h3>${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
 
                     // Check for a summary of the country total amount
                     if (country === "USA" && usaData) {
@@ -274,7 +275,7 @@
             }
 
             const progressWidth = (amount / target) * 100;
-            const barWidth = 300;  // רוחב קבוע של הבר (300 פיקסלים)
+            const barWidth = 250;  // רוחב קבוע של הבר (300 פיקסלים)
 
             return `
                 <div class="progress-bar" style="width: ${barWidth}px;">
