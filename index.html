@@ -9,9 +9,7 @@
     <style>
         body {
             font-family: 'Heebo', sans-serif;
-            background: url('/mnt/data/Untitled-1 (1).jpg') no-repeat center center fixed;
-            background-color: #000000;
-            background-size: cover;
+            background-color: #000;
             color: white;
             direction: rtl;
             text-align: center;
@@ -19,54 +17,29 @@
             padding: 0;
         }
 
-        #rashi {
-            font-family: 'Noto Rashi Hebrew', sans-serif;
-            font-size: 32px;
-            color: white;
-            margin-top: 20px;
-        }
-
         #content-wrapper {
             padding: 20px;
         }
 
-        #fetch-button {
-            background-color: #fdd25e;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-
-        #fetch-button:hover {
-            background-color: grey;
-        }
-
-        #loading {
-            font-size: 20px;
-            color: white;
-            display: none;
-        }
-
         #people-container {
-            display: none;
-            margin-top: 20px;
             display: flex;
             justify-content: space-around;
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .people-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 30%;
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
+        #us-people { background-color: #ffdddd; }
+        #france-people { background-color: #ddffdd; }
+        #china-people { background-color: #ddddff; }
+
         .people-column h3 {
-            color: white;
             font-size: 24px;
             margin-bottom: 10px;
         }
@@ -79,238 +52,23 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             width: 250px;
             text-align: center;
-        }
-
-        .person p {
-            margin: 5px 0;
-        }
-
-        .person strong {
-            color: white;
-        }
-
-        .progress-bar {
-            width: 100%;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            height: 20px;
-            margin-top: 10px;
-        }
-
-        .progress {
-            height: 100%;
-            background-color: green;
-            border-radius: 5px;
-        }
-
-        .progress-text {
-            font-size: 12px;
-            color: white;
-            margin-top: 5px;
-        }
-
-        .header {
-            font-size: 30px;
-            color: white;
-            margin-top: 20px;
-        }
-
-        .global-progress-bar {
-            width: 100%;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            height: 30px;
-            margin-top: 20px;
-        }
-
-        .global-progress {
-            height: 100%;
-            background-color: green;
-            border-radius: 5px;
-        }
-
-        .global-progress-text {
-            font-size: 10px;
-            color: white;
-            text-align: center;
-            line-height: 30px;
-        }
-
-        .person-details {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .person-name {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-
-        .person-info {
-            font-size: 18px;
-        }
-
-        .person-info p {
-            margin: 5px 0;
+            color: black;
         }
     </style>
 </head>
 <body>
-    <p id="rashi">"ישיבת באר התלמוד בויאר פורים תשפ"ה"</p>
     <div id="content-wrapper">
-        <div class="header">
-            <p>נאסף עד כה: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
-        </div>
-
-        <div class="global-progress-bar">
-            <div id="global-progress" class="global-progress" style="width: 0%;"></div>
-        </div>
-
-        <button id="fetch-button" onclick="fetchPeople()">לחץ לעדכון</button>
-        <div id="loading">טוען...</div>
-
         <div id="people-container">
-            <div id="us-people" class="people-column"></div>
-            <div id="france-people" class="people-column"></div>
-            <div id="china-people" class="people-column"></div>
+            <div id="us-people" class="people-column">
+                <h3>ארצות הברית</h3>
+            </div>
+            <div id="france-people" class="people-column">
+                <h3>צרפת</h3>
+            </div>
+            <div id="china-people" class="people-column">
+                <h3>סין</h3>
+            </div>
         </div>
     </div>
-
-    <script>
-        let globalTotal = 0;
-
-        function fetchPeople() {
-            const loadingElement = document.getElementById("loading");
-            loadingElement.style.display = "block";
-
-            fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ request: 'fetch_people' }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                loadingElement.style.display = "none";
-                displayPeople(data);
-                updateGlobalProgress(data);
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-                loadingElement.style.display = "none";
-                alert("שגיאה בטעינת המידע");
-            });
-        }
-
-        function displayPeople(data) {
-            const countries = {
-                "USA": "us-people",
-                "FRANCE": "france-people",
-                "CHINA": "china-people"
-            };
-
-            const summaryData = data.find(item => item[0] === "0");
-            let usaData = '', franceData = '', chinaData = '';
-            let totalUSA = 0, totalFrance = 0, totalChina = 0;
-
-            // Extract data from summary row
-            if (summaryData) {
-                const summary = summaryData[1].split(' ');
-                summary.forEach(entry => {
-                    const [country, sum] = entry.split('=');
-                    if (country === "USA") usaData = sum;
-                    if (country === "FRANCE") franceData = sum;
-                    if (country === "CHINA") chinaData = sum;
-                });
-            }
-
-            // Iterate over countries and fill data for each
-            Object.keys(countries).forEach(country => {
-                const people = data.filter(person => person[0] === country);
-                let content = "";
-                let target = 0;
-                let totalAmount = 0;
-
-                if (people.length > 0) {
-                    content += `<h3>${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
-
-                    // Check for a summary of the country total amount
-                    if (country === "USA" && usaData) {
-                        totalAmount = parseInt(usaData);
-                    }
-                    if (country === "FRANCE" && franceData) {
-                        totalAmount = parseInt(franceData);
-                    }
-                    if (country === "CHINA" && chinaData) {
-                        totalAmount = parseInt(chinaData);
-                    }
-
-                    content += `<h4>סכום כולל: ${formatNumber(totalAmount)} ₪</h4>`;
-                    content += generatePeopleHTML(people.filter(person => person[1] !== "0"), totalAmount);
-                }
-
-                document.getElementById(countries[country]).innerHTML = content;
-            });
-
-            document.getElementById("people-container").style.display = "flex";
-        }
-
-        function generatePeopleHTML(people, target) {
-            return people.map(person => `
-                <div class="person">
-                    <div class="person-name">
-                        <strong>${person[2]}</strong>
-                    </div>
-                    <div class="person-info">
-                        <p><strong>סכום:</strong> ${formatNumber(person[3])} ₪</p>
-                        <p><strong>יעד:</strong> ${formatNumber(person[4])} ₪</p>
-                    </div>
-                    ${generateProgressBar(person[3], person[4])}
-                </div>
-            `).join('');
-        }
-
-        function generateProgressBar(amount, target) {
-            if (!target || target === 0) {
-                return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
-            }
-
-            const progressWidth = (amount / target) * 100;
-            const barWidth = 250;  // רוחב קבוע של הבר (300 פיקסלים)
-
-            return `
-                <div class="progress-bar" style="width: ${barWidth}px;">
-                    <div class="progress" style="width: ${Math.min(progressWidth, 100)}%;"></div>
-                </div>
-                <div class="progress-text">${formatNumber(amount)} ₪ מתוך ${formatNumber(target)} ₪ (${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג)</div>
-            `;
-        }
-
-        function formatNumber(number) {
-            return number.toLocaleString('en'); // יוסיף פסיקים כל אלף
-        }
-
-        function updateGlobalProgress(data) {
-            globalTotal = data.reduce((acc, person) => {
-                if (person[3]) return acc + parseInt(person[3]);
-                return acc;
-            }, 0);
-
-            const globalTarget = 150000;
-            const progressWidth = (globalTotal / globalTarget) * 100;
-
-            // בדוק אם האלמנטים קיימים לפני שמבצע את העדכון
-            const globalProgressElement = document.getElementById("global-progress");
-            const globalProgressTextElement = document.getElementById("global-progress-text");
-            const globalProgressPercentageElement = document.getElementById("global-progress-percentage");
-
-            if (globalProgressElement && globalProgressTextElement && globalProgressPercentageElement) {
-                globalProgressElement.style.width = `${Math.min(progressWidth, 100)}%`;
-                globalProgressTextElement.innerText = `${formatNumber(globalTotal)} ₪ מתוך ${formatNumber(globalTarget)} ₪`;
-                globalProgressPercentageElement.innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
-            } else {
-                console.error("One or more elements are missing in the DOM.");
-            }
-        }
-    </script>
 </body>
 </html>
