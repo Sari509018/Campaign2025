@@ -18,34 +18,57 @@
       margin: 0;
       padding: 0;
     }
-    /* מיקום הלוגו – בצד שמאל למעלה */
-    #logo-container {
-      position: absolute;
-      top: 10px;
-      left: 10px;
+    /* מצב אתחולי – רק הכפתור מופיע במרכז העמוד */
+    #initial-state {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-    #logo {
-      height: 50px;
+    #start-button {
+      background: none;
+      border: none;
+      cursor: pointer;
     }
-    /* תוכן הדף מוסתר עד שהנתונים נטענים */
+    #start-button svg {
+      fill: white;
+      width: 60px;
+      height: 60px;
+    }
+    #start-button:hover svg {
+      fill: grey;
+    }
+    /* הודעת טעינה – מוסתרת בהתחלה */
+    #loading {
+      font-size: 20px;
+      color: black;
+      display: none;
+    }
+    /* תוכן ראשי – מוסתר בהתחלה */
     #content-wrapper {
       display: none;
       padding: 20px;
       position: relative;
       z-index: 1;
     }
-    /* כותרת עליונה עם הלוגו, טקסט והכפתור של הרענון */
+    /* Header עם הלוגו, כותרת ו—buton רענון */
     #header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
+    #logo-container {
+      position: relative;
+    }
+    #logo {
+      height: 50px;
+    }
     .header-text {
       font-size: 30px;
       color: white;
     }
-    /* כפתור רענון – הסרת רקע וקווים, והחלפת הטקסט בסמל */
+    /* כפתור רענון בתוך ה-header */
     #fetch-button {
       background: none;
       border: none;
@@ -59,13 +82,24 @@
     #fetch-button:hover svg {
       fill: grey;
     }
-    /* הודעת טעינה */
-    #loading {
-      font-size: 20px;
-      color: black;
-      display: block;
+    .global-progress-bar {
+      width: 100%;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      height: 30px;
+      margin-top: 20px;
     }
-    /* מיכל האנשים מוסתר עד לטעינת הנתונים */
+    .global-progress {
+      height: 100%;
+      background-color: green;
+      border-radius: 5px;
+    }
+    .global-progress-text {
+      font-size: 10px;
+      color: black;
+      text-align: center;
+      line-height: 30px;
+    }
     #people-container {
       display: none;
       margin-top: 20px;
@@ -88,7 +122,7 @@
       padding: 15px;
       margin: 10px;
       border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       width: 100%;
       text-align: center;
       color: white;
@@ -124,27 +158,20 @@
       color: black;
       margin-top: 5px;
     }
-    .global-progress-bar {
-      width: 100%;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-      height: 30px;
-      margin-top: 20px;
-    }
-    .global-progress {
-      height: 100%;
-      background-color: green;
-      border-radius: 5px;
-    }
-    .global-progress-text {
-      font-size: 10px;
-      color: black;
-      text-align: center;
-      line-height: 30px;
-    }
   </style>
 </head>
 <body>
+  <!-- מצב אתחולי: רק כפתור גדול מופיע -->
+  <div id="initial-state">
+    <button id="start-button" onclick="startFetching()" aria-label="רענן">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+         <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 1 .908-.418A4 4 0 1 0 8 4V1.5a.5.5 0 0 1 1 0V4a.5.5 0 0 1-.5.5H5a.5.5 0 0 1 0-1h3z"/>
+      </svg>
+    </button>
+  </div>
+  <!-- הודעת טעינה -->
+  <div id="loading">נטען...</div>
+  <!-- תוכן ראשי – יופיע רק אחרי קבלת הנתונים -->
   <div id="content-wrapper">
     <div id="header">
       <div id="logo-container">
@@ -152,20 +179,17 @@
         <img id="logo" src="images/logo.png" alt="Logo">
       </div>
       <div class="header-text">
-        <p>נאסף עד כה: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
+        <p>נאסף עד כה: <span id="global-progress-text">0</span> מתוך 150000 (<span id="global-progress-percentage">0%</span>)</p>
       </div>
       <button id="fetch-button" onclick="fetchPeople()" aria-label="רענון">
-        <!-- סמל רענון באמצעות SVG -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 1 .908-.418A4 4 0 1 0 8 4V1.5a.5.5 0 0 1 1 0V4a.5.5 0 0 1-.5.5H5a.5.5 0 0 1 0-1h3z"/>
         </svg>
       </button>
     </div>
-
     <div class="global-progress-bar">
       <div id="global-progress" class="global-progress" style="width: 0%;"></div>
     </div>
-    <div id="loading">טוען...</div>
     <div id="people-container">
       <div id="us-people" class="people-column"></div>
       <div id="france-people" class="people-column"></div>
@@ -175,14 +199,19 @@
 
   <script>
     let globalTotal = 0;
+    let allData = '';
+
+    // הפונקציה שמופעלת כאשר לוחצים על הכפתור הראשוני
+    function startFetching() {
+      // הסתר את מצב האתחול (רק הכפתור)
+      document.getElementById("initial-state").style.display = "none";
+      // הצג הודעת טעינה
+      document.getElementById("loading").style.display = "block";
+      // קריאה לטעינת הנתונים
+      fetchPeople();
+    }
 
     function fetchPeople() {
-      const loadingElement = document.getElementById("loading");
-      loadingElement.style.display = "block";
-
-      // הסתרת כל התוכן עד שהנתונים יגיעו
-      document.getElementById("content-wrapper").style.display = "none";
-
       fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -190,15 +219,16 @@
       })
       .then(response => response.json())
       .then(data => {
-        loadingElement.style.display = "none";
-        // לאחר קבלת הנתונים, הצגת כל התוכן
+        // הסתר הודעת טעינה
+        document.getElementById("loading").style.display = "none";
+        // הצג את התוכן הראשי
         document.getElementById("content-wrapper").style.display = "block";
         displayPeople(data);
         updateGlobalProgress(data);
       })
       .catch(error => {
         console.error("Error fetching data:", error);
-        loadingElement.style.display = "none";
+        document.getElementById("loading").style.display = "none";
         alert("שגיאה בטעינת המידע");
       });
     }
@@ -216,10 +246,11 @@
       if (summaryData) {
         const summary = summaryData[1].split(' ');
         summary.forEach(entry => {
-          const [country, sum] = entry.split('=');
-          if (country === "USA") usaData = sum;
-          if (country === "FRANCE") franceData = sum;
-          if (country === "CHINA") chinaData = sum;
+          const [key, sum] = entry.split('=');
+          if (key === "USA") { usaData = sum; }
+          if (key === "FRANCE") { franceData = sum; }
+          if (key === "CHINA") { chinaData = sum; }
+          if (key === "ALL") { allData = sum; }
         });
       }
 
@@ -278,11 +309,8 @@
     }
 
     function updateGlobalProgress(data) {
-      globalTotal = data.reduce((acc, person) => {
-        if (person[3]) return acc + parseInt(person[3]);
-        return acc;
-      }, 0);
-
+      // השתמש בערך ALL שהתקבל מהשרת
+      globalTotal = allData ? parseInt(allData) : 0;
       const globalTarget = 150000;
       const progressWidth = (globalTotal / globalTarget) * 100;
 
@@ -292,7 +320,7 @@
 
       if (globalProgressElement && globalProgressTextElement && globalProgressPercentageElement) {
         globalProgressElement.style.width = `${Math.min(progressWidth, 100)}%`;
-        globalProgressTextElement.innerText = `${formatNumber(globalTotal)} ₪ מתוך ${formatNumber(globalTarget)} ₪`;
+        globalProgressTextElement.innerText = `${formatNumber(globalTotal)} ₪`;
         globalProgressPercentageElement.innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
       } else {
         console.error("One or more elements are missing in the DOM.");
