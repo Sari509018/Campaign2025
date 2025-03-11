@@ -66,17 +66,6 @@
             font-size: 18px;
             font-weight: bolder;
         }
-        #psalm-container::-webkit-scrollbar {
-            width: 12px;
-        }
-        #psalm-container::-webkit-scrollbar-thumb {
-            background-color: #5cbc5a;
-            border-radius: 6px;
-        }
-        #psalm-container::-webkit-scrollbar-track {
-            background-color: #21262c;
-            border-radius: 6px;
-        }
         #confirm-button {
             margin-top: 10px;
             font-size: 20px;
@@ -88,9 +77,9 @@
             border-radius: 12px;
             display: none;
         }
-        #fetch-button {
-            font-size: 50px;
-            padding: 25px 50px;
+        #fetch-button, #view-people-button {
+            font-size: 30px;
+            padding: 20px 40px;
             font-weight: bold;
             background-color: #5cbc5a;
             color: white;
@@ -108,32 +97,65 @@
             font-size: 22px;
             color: #5cbc5a;
 		}
-
-		#first-verse-container p:last-child {
-			font-size: 18px;
-			margin: 0;
-		}
-
-		
+		.people-container {
+            margin-top: 20px;
+            text-align: right;
+            width: 600px;
+        }
+        .person {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #444;
+            border-radius: 8px;
+        }
+        .person p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
     <p id="rashi">"מי ימלל גבורות יהוה ישמיע כל תהילתו"</p>
     <div id="content-wrapper">
         <button id="fetch-button" onclick="fetchPsalm()">לחץ/י לקבלת פרק תהילים</button>
+        <button id="view-people-button" onclick="viewPeople()">הצג את האנשים</button>
         <div id="loading">טוען פרק...</div>
         <div id="chapter-title"></div>
-		<div id="first-verse-container"></div>
+        <div id="first-verse-container"></div>
         <div id="psalm-container"></div>
         <button id="confirm-button" onclick="submitConfirmation()">✓ קראתי את הפרק</button>
         <div id="thank-you-message">תודה!</div>
         <div id="completion-message">כל הפרקים תפוסים...</div>
+
+        <!-- Container for displaying people information -->
+        <div id="people-container" class="people-container" style="display:none;">
+            <h3>אנשים מארצות הברית:</h3>
+            <div id="us-people"></div>
+            <h3>אנשים מצרפת:</h3>
+            <div id="france-people"></div>
+            <h3>אנשים מסין:</h3>
+            <div id="china-people"></div>
+        </div>
     </div>
 
     <script>
-	
         let timer;
         let hasConfirmed = false;
+
+        // מערכים של אנשים
+        const usPeople = [
+            { name: "יוסי כהן", id: "123456789", amount: 1000 },
+            { name: "מרים לוי", id: "987654321", amount: 500 }
+        ];
+
+        const francePeople = [
+            { name: "פייר דיויד", id: "234567890", amount: 800 },
+            { name: "סימון מרטין", id: "876543210", amount: 200 }
+        ];
+
+        const chinaPeople = [
+            { name: "לין ג'או", id: "345678901", amount: 1200 },
+            { name: "הו לי", id: "765432109", amount: 300 }
+        ];
 
         function fetchPsalm() {
             const loadingElement = document.getElementById("loading");
@@ -154,11 +176,6 @@
             })
             .then(response => response.text())
             .then(data => {
-		    if (data.trim() === "כל הפרקים תפוסים...") {
-                     document.getElementById("completion-message").style.display = "block";
-                     document.getElementById("fetch-button").style.display = "none";
-                     document.getElementById("loading").style.display = "none";
-                 } else {
                     document.getElementById("loading").style.display = "none";
                     document.getElementById("psalm-container").innerHTML = generatePsalmHTMLFromText(data);
                     document.getElementById("psalm-container").style.display = "block";
@@ -168,7 +185,7 @@
 
                     startAutoRefreshTimer();
                 }
-            })
+            )
             .catch(error => {
                 console.error("Error fetching Psalm:", error);
                 document.getElementById("loading").style.display = "none";
@@ -176,33 +193,58 @@
             });
         }
 
-		function generatePsalmHTMLFromText(text) {
-			let html = "";
-			const verses = text.split("׃").map(verse => verse.trim());
+        function viewPeople() {
+            const peopleContainer = document.getElementById("people-container");
+            const usContainer = document.getElementById("us-people");
+            const franceContainer = document.getElementById("france-people");
+            const chinaContainer = document.getElementById("china-people");
 
-			const firstVerse = verses.shift();
-			const firstVerseElement = document.getElementById("first-verse-container");
-			if (firstVerseElement) {
-				firstVerseElement.innerHTML = `
-					<p><span>פרק זה לרפואת:</span> ${firstVerse}</p>
-				`;
-			}
+            usContainer.innerHTML = generatePeopleHTML(usPeople);
+            franceContainer.innerHTML = generatePeopleHTML(francePeople);
+            chinaContainer.innerHTML = generatePeopleHTML(chinaPeople);
 
-			const chapterNumber = verses[0].split(' ')[1];
-			document.getElementById("chapter-title").innerText = `פרק ${chapterNumber}`;
+            peopleContainer.style.display = "block";
+        }
 
-			verses.slice(0, -1).forEach((verse, index) => {
-				if (index === 0) {
-					verse = verse.split(" ").slice(2).join(" ");
-				}
-				verse = verse.replace(/^,/, '').trim();
-				verse = removeCantillation(verse);
-				const gematria = getGematria(index + 1);
-				html += `<p id="psalm"><span>${gematria}</span> ${verse}׃</p>`;
-			});
+        function generatePeopleHTML(people) {
+            return people.map(person => {
+                return `
+                    <div class="person">
+                        <p><strong>שם:</strong> ${person.name}</p>
+                        <p><strong>תעודת זהות:</strong> ${person.id}</p>
+                        <p><strong>סכום:</strong> ${person.amount} ₪</p>
+                    </div>
+                `;
+            }).join('');
+        }
 
-			return html;
-		}
+        function generatePsalmHTMLFromText(text) {
+            let html = "";
+            const verses = text.split("׃").map(verse => verse.trim());
+
+            const firstVerse = verses.shift();
+            const firstVerseElement = document.getElementById("first-verse-container");
+            if (firstVerseElement) {
+                firstVerseElement.innerHTML = `
+                    <p><span>פרק זה לרפואת:</span> ${firstVerse}</p>
+                `;
+            }
+
+            const chapterNumber = verses[0].split(' ')[1];
+            document.getElementById("chapter-title").innerText = `פרק ${chapterNumber}`;
+
+            verses.slice(0, -1).forEach((verse, index) => {
+                if (index === 0) {
+                    verse = verse.split(" ").slice(2).join(" ");
+                }
+                verse = verse.replace(/^,/, '').trim();
+                verse = removeCantillation(verse);
+                const gematria = getGematria(index + 1);
+                html += `<p id="psalm"><span>${gematria}</span> ${verse}׃</p>`;
+            });
+
+            return html;
+        }
 
         function removeCantillation(text) {
             return text.replace(/[\u0591-\u05AF](?![\u05B0-\u05C7])/g, '').trim();
@@ -252,40 +294,36 @@
             });
         }
 
-		function startAutoRefreshTimer() {
-			console.log("Timer started for 20 minutes.");
-			timer = setTimeout(() => {
-				if (!hasConfirmed) {
-					console.log("20 minutes passed without confirmation.");
-					const chapterTitle = document.getElementById("chapter-title").innerText;
+        function startAutoRefreshTimer() {
+            console.log("Timer started for 20 minutes.");
+            timer = setTimeout(() => {
+                if (!hasConfirmed) {
+                    console.log("20 minutes passed without confirmation.");
+                    const chapterTitle = document.getElementById("chapter-title").innerText;
 
-					fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({
-							status: 'close',
-							chapter: chapterTitle,
-						}),
-					})
-					.then(response => response.text())
-					.then(data => {
-						console.log("Close status sent successfully. Response:", data);
-						// רענון הדף לאחר 2 שניות
-						setTimeout(() => {
-							console.log("Refreshing page after 2 seconds.");
-							location.reload();
-						}, 2000);
-					})
-					.catch(error => {
-						console.error("Error sending close status:", error);
-					});
-				}
-			}, 1200000); // 20 דקות
-		}
-
-
+                    fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            status: 'close',
+                            chapter: chapterTitle,
+                        }),
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log("Close status sent successfully. Response:", data);
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        console.error("Error sending close status:", error);
+                    });
+                }
+            }, 1200000); // 20 דקות
+        }
     </script>
 </body>
 </html>
