@@ -113,15 +113,45 @@
             color: black;
             margin-top: 20px;
         }
+
+        .global-progress-bar {
+            width: 100%;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            height: 30px;
+            margin-top: 20px;
+        }
+
+        .global-progress {
+            height: 100%;
+            background-color: green;
+            border-radius: 5px;
+        }
+
+        .global-progress-text {
+            font-size: 14px;
+            color: black;
+            text-align: center;
+            line-height: 30px;
+        }
+
+        .person-details {
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body>
     <p id="rashi">"מי ימלל גבורות יהוה ישמיע כל תהילתו"</p>
     <div id="content-wrapper">
         <div class="header">
-            <p>בר התקדמות: 15000 מתוך 150000</p>
-            <p>כותרת ראשונה כאן</p>
+            <p>בר התקדמות: <span id="global-progress-text">0 מתוך 150000</span></p>
         </div>
+
+        <div class="global-progress-bar">
+            <div id="global-progress" class="global-progress" style="width: 0%;"></div>
+        </div>
+
         <button id="fetch-button" onclick="fetchPeople()">לחץ/י לקבלת רשימת אנשים</button>
         <div id="loading">טוען...</div>
 
@@ -133,6 +163,8 @@
     </div>
 
     <script>
+        let globalTotal = 0;
+
         function fetchPeople() {
             const loadingElement = document.getElementById("loading");
             loadingElement.style.display = "block";
@@ -146,6 +178,7 @@
             .then(data => {
                 loadingElement.style.display = "none";
                 displayPeople(data);
+                updateGlobalProgress(data);
             })
             .catch(error => {
                 console.error("Error fetching data:", error);
@@ -210,10 +243,11 @@
         function generatePeopleHTML(people, target) {
             return people.map(person => `
                 <div class="person">
-                    <p><strong>שם:</strong> ${person[2]}</p>
-                    <p><strong>מספר זיהוי:</strong> ${person[1]}</p>
-                    <p><strong>סכום:</strong> ${person[3]} ₪</p>
-                    <p><strong>יעד:</strong> ${person[4]} ₪</p>
+                    <div class="person-details">
+                        <p><strong>שם:</strong> ${person[2]}</p>
+                        <p><strong>סכום:</strong> ${person[3]} ₪</p>
+                        <p><strong>יעד:</strong> ${person[4]} ₪</p>
+                    </div>
                     ${generateProgressBar(person[3], person[4])}
                 </div>
             `).join('');
@@ -230,6 +264,19 @@
                 </div>
                 <div class="progress-text">${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג</div>
             `;
+        }
+
+        function updateGlobalProgress(data) {
+            globalTotal = data.reduce((acc, person) => {
+                if (person[3]) return acc + parseInt(person[3]);
+                return acc;
+            }, 0);
+
+            const globalTarget = 150000;
+            const progressWidth = (globalTotal / globalTarget) * 100;
+
+            document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
+            document.getElementById("global-progress-text").textContent = `${globalTotal} מתוך ${globalTarget}`;
         }
     </script>
 </body>
