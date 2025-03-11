@@ -210,8 +210,7 @@
   document.getElementById("logo-container").style.display = "none";
   fetchPeople();
 }
-
-
+      window.startFetching = startFetching;
     
     function fetchPeople() {
       fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
@@ -228,12 +227,12 @@
   document.getElementById("fixed-logo").style.display = "block";
         displayPeople(data);
         updateGlobalProgress(data);
-      })
+      });
       .catch(error => {
   console.error("Error fetching data:", error);
   document.getElementById("loading").innerText = "שגיאה בטעינת המידע";
 });
-    
+    }
     function displayPeople(data) {
       const countries = {
         "USA": "us-people",
