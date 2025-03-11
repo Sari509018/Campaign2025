@@ -150,18 +150,23 @@
                 const totalAmount = people.find(person => person[1] === 0);
                 let target = 0;
                 let countryData = '';
+                let totalSum = 0;
+
                 if (totalAmount) {
                     target = totalAmount[4];
                     countryData = totalAmount[2];
                     countryData += ` - יעד: ${target}`;
                 }
+
                 let content = "";
-                
                 if (people.length > 0) {
                     content += `<h3>אנשים מ${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
                     if (target) {
                         content += `<h4>${countryData}</h4>`;
                     }
+
+                    totalSum = people.reduce((sum, person) => sum + parseInt(person[3]), 0);
+                    content += `<h4>סכום כולל: ${totalSum} ₪</h4>`;
                     content += generatePeopleHTML(people.filter(person => person[1] !== 0), target);
                 }
                 
