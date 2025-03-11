@@ -154,6 +154,11 @@
             })
             .then(response => response.text())
             .then(data => {
+		    if (data.trim() === "כל הפרקים תפוסים...") {
+                     document.getElementById("completion-message").style.display = "block";
+                     document.getElementById("fetch-button").style.display = "none";
+                     document.getElementById("loading").style.display = "none";
+                 } else {
                     document.getElementById("loading").style.display = "none";
                     document.getElementById("psalm-container").innerHTML = generatePsalmHTMLFromText(data);
                     document.getElementById("psalm-container").style.display = "block";
