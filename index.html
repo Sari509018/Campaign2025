@@ -18,13 +18,29 @@
       margin: 0;
       padding: 0;
     }
-    /* מצב אתחולי – רק כפתור גדול במרכז הדף */
-    #initial-state {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      color:white
+#initial-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+#logo-container {
+  cursor: pointer;
+}
+#logo {
+  height: 150px;
+}
+/* הלוגו קבוע בצד ימין למעלה לאחר הטעינה */
+#fixed-logo {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  height: 150px;
+  cursor: pointer;
+  display: none;
+}
+    #logo-container {
+      text-align: left;
     }
     #start-button {
       background: none;
@@ -58,12 +74,6 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-    }
-    #logo-container {
-      text-align: left;
-    }
-    #logo {
-      height: 50px;
     }
     .header-text {
       font-size: 30px;
@@ -155,12 +165,13 @@
 </head>
 <body>
   <!-- מצב אתחולי: מוצג רק כפתור רענון גדול במרכז -->
-  <div id="initial-state">
-    <button id="start-button" onclick="startFetching()">
-רענן נתונים
-    </button>
+<div id="initial-state">
+  <div id="logo-container" onclick="startFetching()">
+    <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
   </div>
-  
+</div>
+
+
   <!-- הודעת טעינה -->
   <div id="loading">נטען...</div>
   
@@ -169,14 +180,11 @@
     <div id="header">
       <div id="logo-container">
         <!-- עדכני את הנתיב לקובץ הלוגו שלך -->
-        <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
+        <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo" onclick="fetchPeople()">
       </div>
       <div class="header-text">
         נאסף עד כה: <span id="global-progress-text">0</span>150,000 מתוך (<span id="global-progress-percentage">0%</span>)
       </div>
-      <button id="refresh-button" style="color:white" onclick="fetchPeople()" aria-label="רענון">
-🌍
-      </button>
     </div>
     <div class="global-progress-bar">
       <div id="global-progress" class="global-progress" style="width: 0%;"></div>
@@ -195,10 +203,11 @@
     // הפונקציה שמופעלת בלחיצה על הכפתור הראשוני
     function startFetching() {
       document.getElementById("initial-state").style.display = "none";
-      document.getElementById("loading").style.display = "block";
+      document.getElementById("content-wrapper").style.display = "block";
+        document.getElementById("fixed-logo").style.display = "block";
+
       fetchPeople();
-    }
-    
+    }  
     function fetchPeople() {
       fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
         method: 'POST',
