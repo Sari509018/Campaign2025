@@ -174,8 +174,7 @@
       <div class="header-text">
         נאסף עד כה: <span id="global-progress-text">0</span> מתוך 150000 (<span id="global-progress-percentage">0%</span>)
       </div>
-      <button id="refresh-button" onclick="fetchPeople()" aria-label="רענון">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+      <button id="refresh-button" style="color:white" onclick="fetchPeople()" aria-label="רענון">
 🌍
       </button>
     </div>
@@ -231,7 +230,7 @@
       const summaryData = data.find(item => item[0] === "0");
       let usaData = "", franceData = "", chinaData = "";
       if (summaryData) {
-        const parts = summaryData[1].split(' ');
+        const parts = summaryData[1].split('|');
         parts.forEach(part => {
           let [key, value] = part.split('=');
           key = key.trim();
