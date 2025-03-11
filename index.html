@@ -143,10 +143,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    status: 'open',
-                }),
+                }
             })
             .then(response => response.text())
             .then(data => {
