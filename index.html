@@ -147,7 +147,7 @@
 
             Object.keys(countries).forEach(country => {
                 const people = data.filter(person => person[0] === country);
-                const totalAmount = people.find(person => person[1] === 0);
+                const totalAmount = people.find(person => person[1] === "0");
                 let target = 0;
                 let countryData = '';
                 let totalSum = 0;
@@ -167,7 +167,7 @@
 
                     totalSum = people.reduce((sum, person) => sum + parseInt(person[3]), 0);
                     content += `<h4>סכום כולל: ${totalSum} ₪</h4>`;
-                    content += generatePeopleHTML(people.filter(person => person[1] !== 0), target);
+                    content += generatePeopleHTML(people.filter(person => person[1] !== "0"), target);
                 }
                 
                 document.getElementById(countries[country]).innerHTML = content;
