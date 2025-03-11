@@ -101,6 +101,12 @@
             background-color: green;
             border-radius: 5px;
         }
+
+        .progress-text {
+            font-size: 12px;
+            color: black;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -194,6 +200,7 @@
                 <div class="progress-bar">
                     <div class="progress" style="width: ${Math.min(progressWidth, 100)}%"></div>
                 </div>
+                <div class="progress-text">${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג</div>
             `;
         }
     </script>
