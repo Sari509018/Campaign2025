@@ -176,8 +176,7 @@
       </div>
       <button id="refresh-button" onclick="fetchPeople()" aria-label="רענון">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 1 .908-.418A4 4 0 1 0 8 4V1.5a.5.5 0 0 1 1 0V4a.5.5 0 0 1-.5.5H5a.5.5 0 0 1 0-1h3z"/>
-        </svg>
+🌍
       </button>
     </div>
     <div class="global-progress-bar">
@@ -194,13 +193,10 @@
     // משתנה לשמירת ערך ALL מתוך שורת הסיכום
     let allData = "0";
     
-    // פונקציה שמופעלת בלחיצה על הכפתור הראשוני
+    // הפונקציה שמופעלת בלחיצה על הכפתור הראשוני
     function startFetching() {
-      // הסתר מצב האתחול
       document.getElementById("initial-state").style.display = "none";
-      // הצג הודעת טעינה
       document.getElementById("loading").style.display = "block";
-      // הפעל את בקשת הנתונים
       fetchPeople();
     }
     
@@ -212,9 +208,7 @@
       })
       .then(response => response.json())
       .then(data => {
-        // הסתר הודעת טעינה
         document.getElementById("loading").style.display = "none";
-        // הצג את התוכן הראשי
         document.getElementById("content-wrapper").style.display = "block";
         displayPeople(data);
         updateGlobalProgress(data);
@@ -233,13 +227,15 @@
         "CHINA": "china-people"
       };
       
-      // חיפוש שורת הסיכום (כאשר הפריט הראשון הוא "0")
+      // מציאת שורת הסיכום (כאשר הפריט הראשון הוא "0")
       const summaryData = data.find(item => item[0] === "0");
       let usaData = "", franceData = "", chinaData = "";
       if (summaryData) {
         const parts = summaryData[1].split(' ');
         parts.forEach(part => {
-          const [key, value] = part.split('=');
+          let [key, value] = part.split('=');
+          key = key.trim();
+          value = value.trim();
           if (key === "USA") { usaData = value; }
           else if (key === "FRANCE") { franceData = value; }
           else if (key === "CHINA") { chinaData = value; }
@@ -253,9 +249,9 @@
         let totalAmount = 0;
         if (people.length > 0) {
           content += `<h3>${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
-          if (country === "USA" && usaData) totalAmount = parseInt(usaData);
-          if (country === "FRANCE" && franceData) totalAmount = parseInt(franceData);
-          if (country === "CHINA" && chinaData) totalAmount = parseInt(chinaData);
+          if (country === "USA") totalAmount = parseInt(usaData) || 0;
+          if (country === "FRANCE") totalAmount = parseInt(franceData) || 0;
+          if (country === "CHINA") totalAmount = parseInt(chinaData) || 0;
           content += `<h4>סכום כולל: ${formatNumber(totalAmount)} ₪</h4>`;
           content += generatePeopleHTML(people.filter(person => person[1] !== "0"));
         }
@@ -299,7 +295,7 @@
     
     function updateGlobalProgress(data) {
       const globalTarget = 150000;
-      const totalAll = allData ? parseInt(allData) : 0;
+      const totalAll = parseInt(allData) || 0;
       const progressWidth = (totalAll / globalTarget) * 100;
       document.getElementById("global-progress-text").innerText = formatNumber(totalAll);
       document.getElementById("global-progress-percentage").innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
