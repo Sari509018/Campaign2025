@@ -87,6 +87,20 @@
         .person strong {
             color: black;
         }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: lightgray;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: green;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -136,30 +150,37 @@
                 const totalAmount = people.find(person => person[1] === 0);
                 const target = 10000; // יעד לדוגמה
                 let content = "";
-                
+
                 if (people.length > 0) {
                     content += `<h3>אנשים מ${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
                     if (totalAmount) {
                         const percentage = ((totalAmount[3] / target) * 100).toFixed(2);
                         content += `<h4>סכום כולל: ${totalAmount[3]} ₪ (${percentage}% מתוך ${target} ₪)</h4>`;
                     }
-                    content += generatePeopleHTML(people.filter(person => person[1] !== 0));
+                    content += generatePeopleHTML(people.filter(person => person[1] !== 0), target);
                 }
-                
+
                 document.getElementById(countries[country]).innerHTML = content;
             });
-            
+
             document.getElementById("people-container").style.display = "flex";
         }
 
-        function generatePeopleHTML(people) {
-            return people.map(person => `
-                <div class="person">
-                    <p><strong>שם:</strong> ${person[2]}</p>
-                    <p><strong>מספר זיהוי:</strong> ${person[1]}</p>
-                    <p><strong>סכום:</strong> ${person[3]} ₪</p>
-                </div>
-            `).join('');
+        function generatePeopleHTML(people, target) {
+            return people.map(person => {
+                const percentage = ((person[3] / target) * 100).toFixed(2);
+                return `
+                    <div class="person">
+                        <p><strong>שם:</strong> ${person[2]}</p>
+                        <p><strong>מספר זיהוי:</strong> ${person[1]}</p>
+                        <p><strong>סכום:</strong> ${person[3]} ₪</p>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${percentage}%"></div>
+                        </div>
+                        <p>${percentage}% מתוך ${target} ₪</p>
+                    </div>
+                `;
+            }).join('');
         }
     </script>
 </body>
