@@ -1,345 +1,318 @@
 <!DOCTYPE html>
 <html lang="he">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campaign2025</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Rashi+Hebrew&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Heebo', sans-serif;
-            background: url('/mnt/data/Untitled-1 (1).jpg') no-repeat center center fixed;
-            background-color: #000000;
-            background-size: cover;
-            color: white;
-            direction: rtl;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .bg-logo {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: url('https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" width="1024" height="auto') no-repeat center center;
-          background-size: contain;
-          opacity: 0.1; /* שקיפות נמוכה כדי שהלוגו לא יפריע לתוכן */
-          z-index: -1;
-        }
-        
-        #rashi {
-            font-family: 'Noto Rashi Hebrew', sans-serif;
-            font-size: 32px;
-            color: #090e22;
-            margin-top: 20px;
-        }
-
-        #content-wrapper {
-            padding: 20px;
-        }
-
-        #fetch-button {
-            background-color: #090e22;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-
-        #fetch-button:hover {
-            background-color: #4a6a93;
-        }
-
-        #loading {
-            font-size: 20px;
-            color: white;
-            display: none;
-        }
-
-        #people-container {
-            display: none;
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .people-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 32%;
-        }
-
-        .people-column h3 {
-            color: white;
-            font-size: 24px;
-        }
-        
-    .person {
-        background-color: #4a6a93; /* צבע הרקע החדש */
-        padding: 5px;
-        margin: 10px;
-        border-radius: 5px;
-        box-shadow: 0 0px 10px #4a6a93;
-        width: 100%;
-        text-align: center;
-        color: black; /* שים לב גם לשנות את צבע הטקסט ל"לבן" כדי שיהיה קריא על הרקע החדש */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campaign2025</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Rashi+Hebrew&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Heebo&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: url('/mnt/data/Untitled-1 (1).jpg') no-repeat center center fixed;
+      background-color: #000000;
+      background-size: cover;
+      color: white;
+      direction: rtl;
+      text-align: center;
+      margin: 0;
+      padding: 0;
     }
 
+    /* הלוגו יהיה למעלה בצד, קטן וממוקם בקצה */
+    #logo-container {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
 
-        .person {
-            margin: 5px 0;
-            color:black;
-        }
-        p {
-            margin: 5px 0;
-            color:white;
-        }
+    #logo {
+      height: 50px;
+    }
 
-        .person strong {
-            color: black;
-        }
+    /* הסתרת כל התוכן עד שהנתונים יגיעו */
+    #content-wrapper {
+      display: none;
+      padding: 20px;
+    }
 
-        .progress-bar {
-            width: 100%;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            height: 20px;
-            margin-top: 10px;
-        }
+    #fetch-button {
+      background-color: #fdd25e;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
 
-        .progress {
-            height: 100%;
-            background-color: #fdc344;
-            border-radius: 5px;
-        }
+    #fetch-button:hover {
+      background-color: grey;
+    }
 
-        .progress-text {
-            font-size: 12px;
-            color: black;
-            margin-top: 5px;
-        }
+    #loading {
+      font-size: 20px;
+      color: black;
+      /* נרצה להציג את הודעת הטעינה עד שהכל נטען */
+      display: block;
+    }
 
-        .header {
-            font-size: 30px;
-            color: black;
-            margin-top: 20px;
-        }
+    #people-container {
+      /* הסתרת תיבת הפרטים עד להגעה של הנתונים */
+      display: none;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
 
-        .global-progress-bar {
-            width: 100%;
-            background-color: #f0f0f0;
-            border-radius: 5px;
-            height: 30px;
-            margin-top: 20px;
-        }
+    .people-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 32%;
+    }
 
-        .global-progress {
-            height: 100%;
-            background-color: #fdc344;
-            border-radius: 5px;
-        }
+    .people-column h3 {
+      color: white;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
 
-        .global-progress-text {
-            font-size: 10px;
-            color: white;
-            text-align: center;
-            line-height: 30px;
-        }
+    .person {
+      background-color: #4a6a93;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      text-align: center;
+      /* בהמשך נעדכן: הטקסט שבפנים יהיה שחור (בשורות שמציגות את הפרטים) */
+      color: white;
+    }
 
-        .person-details {
-            display: flex;
-            justify-content: space-between;
-        }
+    .person-name {
+      font-size: 20px;
+      color: black; /* שם האדם יהיה בשחור */
+      margin-bottom: 5px;
+    }
 
-        .person-name {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
+    .person-info {
+      font-size: 18px;
+      color: black; /* הסכום והיעד יהיו בשחור */
+    }
 
-        .person-info {
-            font-size: 18px;
-        }
+    .person-info .amount,
+    .person-info .target {
+      display: inline-block;
+      width: 45%;
+    }
 
-        .person-info p {
-            margin: 5px 0;
-        }
+    .progress-bar {
+      width: 100%;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      height: 20px;
+      margin-top: 10px;
+    }
 
-        .person-info .amount,
-        .person-info .target {
-            display: inline-block;
-            width: 45%;
-        }
-    </style>
+    .progress {
+      height: 100%;
+      background-color: green;
+      border-radius: 5px;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: black;
+      margin-top: 5px;
+    }
+
+    .header {
+      font-size: 30px;
+      color: white;  /* כותרות יהיו לבנות */
+      margin-top: 20px;
+    }
+
+    .global-progress-bar {
+      width: 100%;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      height: 30px;
+      margin-top: 20px;
+    }
+
+    .global-progress {
+      height: 100%;
+      background-color: green;
+      border-radius: 5px;
+    }
+
+    .global-progress-text {
+      font-size: 5px;
+      color: black;
+      text-align: center;
+      line-height: 30px;
+    }
+  </style>
 </head>
 <body>
-    <div class="bg-logo"></div>
-    <p id="rashi">"ישיבת באר התלמוד בויאר פורים תשפ"ה"</p>
-    <div id="content-wrapper">
-        <div class="header">
-            <p>נאסף עד כה: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
-        </div>
+  <!-- הלוגו יופיע רק לאחר שהנתונים נטענו (כיוון שהוא בתוך content-wrapper) -->
+  <div id="content-wrapper">
+    <div id="logo-container">
 
-        <div class="global-progress-bar">
-            <div id="global-progress" class="global-progress" style="width: 0%;"></div>
-        </div>
-
-        <button id="fetch-button" onclick="fetchPeople()">לחץ לעדכון</button>
-        <div id="loading">טוען...</div>
-
-        <div id="people-container">
-            <div id="us-people" class="people-column"></div>
-            <div id="france-people" class="people-column"></div>
-            <div id="china-people" class="people-column"></div>
-        </div>
+      <img id="logo" src="images/logo.png" alt="Logo">
+    </div>
+    <div class="header">
+      <p>נאסף עד כה: <span id="global-progress-text">0 מתוך 150000</span> (<span id="global-progress-percentage">0%</span>)</p>
     </div>
 
-    <script>
-        let globalTotal = 0;
+    <div class="global-progress-bar">
+      <div id="global-progress" class="global-progress" style="width: 0%;"></div>
+    </div>
 
-        function fetchPeople() {
-            const loadingElement = document.getElementById("loading");
-            loadingElement.style.display = "block";
+    <button id="fetch-button" onclick="fetchPeople()"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 16 16"></button>
+    <div id="loading">טוען...</div>
 
-            // הסתר את כל התוכן עד שהנתונים יגיעו
-            document.getElementById("people-container").style.display = "none";
+    <div id="people-container">
+      <div id="us-people" class="people-column"></div>
+      <div id="france-people" class="people-column"></div>
+      <div id="china-people" class="people-column"></div>
+    </div>
+  </div>
 
-            fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ request: 'fetch_people' }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                loadingElement.style.display = "none";
-                displayPeople(data);
-                updateGlobalProgress(data);
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-                loadingElement.style.display = "none";
-                alert("שגיאה בטעינת המידע");
-            });
+  <script>
+    let globalTotal = 0;
+
+    function fetchPeople() {
+      const loadingElement = document.getElementById("loading");
+      loadingElement.style.display = "block";
+
+      // הסתרת תכולת ה- content-wrapper עד להגעה של הנתונים
+      document.getElementById("content-wrapper").style.display = "none";
+
+      fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request: 'fetch_people' }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        loadingElement.style.display = "none";
+        // לאחר קבלת הנתונים, הציגי את כל התוכן
+        document.getElementById("content-wrapper").style.display = "block";
+        displayPeople(data);
+        updateGlobalProgress(data);
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+        loadingElement.style.display = "none";
+        alert("שגיאה בטעינת המידע");
+      });
+    }
+
+    function displayPeople(data) {
+      const countries = {
+        "USA": "us-people",
+        "FRANCE": "france-people",
+        "CHINA": "china-people"
+      };
+
+      const summaryData = data.find(item => item[0] === "0");
+      let usaData = '', franceData = '', chinaData = '';
+
+      if (summaryData) {
+        const summary = summaryData[1].split(' ');
+        summary.forEach(entry => {
+          const [country, sum] = entry.split('=');
+          if (country === "USA") usaData = sum;
+          if (country === "FRANCE") franceData = sum;
+          if (country === "CHINA") chinaData = sum;
+        });
+      }
+
+      Object.keys(countries).forEach(country => {
+        const people = data.filter(person => person[0] === country);
+        let content = "";
+        let totalAmount = 0;
+
+        if (people.length > 0) {
+          content += `<h3>${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
+
+          if (country === "USA" && usaData) {
+            totalAmount = parseInt(usaData);
+          }
+          if (country === "FRANCE" && franceData) {
+            totalAmount = parseInt(franceData);
+          }
+          if (country === "CHINA" && chinaData) {
+            totalAmount = parseInt(chinaData);
+          }
+
+          content += `<h4>סכום כולל: ${formatNumber(totalAmount)} ₪</h4>`;
+          content += generatePeopleHTML(people.filter(person => person[1] !== "0"), totalAmount);
         }
 
-        function displayPeople(data) {
-            const countries = {
-                "USA": "us-people",
-                "FRANCE": "france-people",
-                "CHINA": "china-people"
-            };
+        document.getElementById(countries[country]).innerHTML = content;
+      });
 
-            const summaryData = data.find(item => item[0] === "0");
-            let usaData = '', franceData = '', chinaData = '';
-            let totalUSA = 0, totalFrance = 0, totalChina = 0;
+      document.getElementById("people-container").style.display = "flex";
+    }
 
-            // Extract data from summary row
-            if (summaryData) {
-                const summary = summaryData[1].split(' ');
-                summary.forEach(entry => {
-                    const [country, sum] = entry.split('=');
-                    if (country === "USA") usaData = sum;
-                    if (country === "FRANCE") franceData = sum;
-                    if (country === "CHINA") chinaData = sum;
-                });
-            }
+    function generatePeopleHTML(people, target) {
+      return people.map(person => `
+        <div class="person">
+          <div class="person-name">
+            <strong>${person[2]}</strong>
+          </div>
+          <div class="person-info">
+            <span class="amount"><strong>סכום:</strong> ${formatNumber(person[3])} ₪</span>
+            <span class="target"><strong>יעד:</strong> ${formatNumber(person[4])} ₪</span>
+          </div>
+          ${generateProgressBar(person[3], person[4])}
+        </div>
+      `).join('');
+    }
 
-            // Iterate over countries and fill data for each
-            Object.keys(countries).forEach(country => {
-                const people = data.filter(person => person[0] === country);
-                let content = "";
-                let target = 0;
-                let totalAmount = 0;
+    function generateProgressBar(amount, target) {
+      if (!target || target === 0) {
+        return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
+      }
 
-                if (people.length > 0) {
-                    content += `<h3>${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
+      const progressWidth = (amount / target) * 100;
+      return `
+        <div class="progress-bar">
+          <div class="progress" style="width: ${Math.min(progressWidth, 100)}%;"></div>
+        </div>
+        <div class="progress-text">${formatNumber(amount)} ₪ מתוך ${formatNumber(target)} ₪ (${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג)</div>
+      `;
+    }
 
-                    // Check for a summary of the country total amount
-                    if (country === "USA" && usaData) {
-                        totalAmount = parseInt(usaData);
-                    }
-                    if (country === "FRANCE" && franceData) {
-                        totalAmount = parseInt(franceData);
-                    }
-                    if (country === "CHINA" && chinaData) {
-                        totalAmount = parseInt(chinaData);
-                    }
+    function formatNumber(number) {
+      return number.toLocaleString('en');
+    }
 
-                    content += `<h4>סכום כולל: ${formatNumber(totalAmount)} ₪</h4>`;
-                    content += generatePeopleHTML(people.filter(person => person[1] !== "0"), totalAmount);
-                }
+    function updateGlobalProgress(data) {
+      globalTotal = data.reduce((acc, person) => {
+        if (person[3]) return acc + parseInt(person[3]);
+        return acc;
+      }, 0);
 
-                document.getElementById(countries[country]).innerHTML = content;
-            });
+      const globalTarget = 150000;
+      const progressWidth = (globalTotal / globalTarget) * 100;
 
-            // לאחר קבלת הנתונים, הצג את התוכן
-            document.getElementById("people-container").style.display = "flex";
-        }
+      const globalProgressElement = document.getElementById("global-progress");
+      const globalProgressTextElement = document.getElementById("global-progress-text");
+      const globalProgressPercentageElement = document.getElementById("global-progress-percentage");
 
-        function generatePeopleHTML(people, target) {
-            return people.map(person => `
-                <div class="person">
-                    <div class="person-name">
-                        <strong>${person[2]}</strong>
-                    </div>
-                    <div class="person-info">
-                        <span class="amount"><strong>סכום:</strong> ${formatNumber(person[3])} ₪</span>
-                        <span class="target"><strong>יעד:</strong> ${formatNumber(person[4])} ₪</span>
-                    </div>
-                    ${generateProgressBar(person[3], person[4])}
-                </div>
-            `).join('');
-        }
-
-        function generateProgressBar(amount, target) {
-            if (!target || target === 0) {
-                return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
-            }
-
-            const progressWidth = (amount / target) * 100;
-
-            return `
-                <div class="progress-bar">
-                    <div class="progress" style="width: ${Math.min(progressWidth, 100)}%;"></div>
-                </div>
-                <div class="progress-text">${formatNumber(amount)} ₪ מתוך ${formatNumber(target)} ₪ (${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג)</div>
-            `;
-        }
-
-        function formatNumber(number) {
-            return number.toLocaleString('en'); // יוסיף פסיקים כל אלף
-        }
-
-        function updateGlobalProgress(data) {
-            globalTotal = data.reduce((acc, person) => {
-                if (person[3]) return acc + parseInt(person[3]);
-                return acc;
-            }, 0);
-
-            const globalTarget = 150000;
-            const progressWidth = (globalTotal / globalTarget) * 100;
-
-            const globalProgressElement = document.getElementById("global-progress");
-            const globalProgressTextElement = document.getElementById("global-progress-text");
-            const globalProgressPercentageElement = document.getElementById("global-progress-percentage");
-
-            if (globalProgressElement && globalProgressTextElement && globalProgressPercentageElement) {
-                globalProgressElement.style.width = `${Math.min(progressWidth, 100)}%`;
-                globalProgressTextElement.innerText = `${formatNumber(globalTotal)} ₪ מתוך ${formatNumber(globalTarget)} ₪`;
-                globalProgressPercentageElement.innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
-            } else {
-                console.error("One or more elements are missing in the DOM.");
-            }
-        }
-    </script>
+      if (globalProgressElement && globalProgressTextElement && globalProgressPercentageElement) {
+        globalProgressElement.style.width = `${Math.min(progressWidth, 100)}%`;
+        globalProgressTextElement.innerText = `${formatNumber(globalTotal)} ₪ מתוך ${formatNumber(globalTarget)} ₪`;
+        globalProgressPercentageElement.innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
+      } else {
+        console.error("One or more elements are missing in the DOM.");
+      }
+    }
+  </script>
 </body>
 </html>
