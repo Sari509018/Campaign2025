@@ -9,7 +9,8 @@
     <style>
         body {
             font-family: 'Heebo', sans-serif;
-            background-color: #f9f9f9;
+            background-color: #000;
+            color: white;
             direction: rtl;
             text-align: center;
             margin: 0;
@@ -54,17 +55,26 @@
         }
 
         h3 {
-            color: #2d2d2d;
+            color: #f1a349;
             font-size: 24px;
             margin-bottom: 10px;
+        }
+
+        .people-column {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 10px;
         }
 
         .person {
             background-color: #fff;
             padding: 15px;
-            margin: 10px 0;
+            margin: 10px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: right;
         }
 
         .person p {
@@ -85,13 +95,13 @@
         <!-- Container for displaying people information -->
         <div id="people-container">
             <h3>אנשים מארצות הברית:</h3>
-            <div id="us-people"></div>
+            <div id="us-people" class="people-column"></div>
 
             <h3>אנשים מצרפת:</h3>
-            <div id="france-people"></div>
+            <div id="france-people" class="people-column"></div>
 
             <h3>אנשים מסין:</h3>
-            <div id="china-people"></div>
+            <div id="china-people" class="people-column"></div>
         </div>
     </div>
 
