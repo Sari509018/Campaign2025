@@ -29,7 +29,7 @@
         #content-wrapper {
             padding: 20px;
         }
-        
+
         #fetch-button {
             background-color: #fdd25e;
             color: white;
@@ -55,28 +55,14 @@
             display: none;
             margin-top: 20px;
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
         }
 
         .people-column {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 30%;
-            padding: 20px;
-            border-radius: 10px;
-        }
-
-        #us-people {
-            background-color: #f1c40f; /* צבע רקע לארצות הברית */
-        }
-
-        #france-people {
-            background-color: #3498db; /* צבע רקע לצרפת */
-        }
-
-        #china-people {
-            background-color: #e74c3c; /* צבע רקע לסין */
+            width: 32%;
         }
 
         .people-column h3 {
@@ -91,7 +77,7 @@
             margin: 10px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            width: 250px;
+            width: 100%;
             text-align: center;
         }
 
@@ -167,6 +153,12 @@
         .person-info p {
             margin: 5px 0;
         }
+
+        .person-info .amount,
+        .person-info .target {
+            display: inline-block;
+            width: 45%;
+        }
     </style>
 </head>
 <body>
@@ -196,6 +188,9 @@
         function fetchPeople() {
             const loadingElement = document.getElementById("loading");
             loadingElement.style.display = "block";
+
+            // הסתר את כל התוכן עד שהנתונים יגיעו
+            document.getElementById("people-container").style.display = "none";
 
             fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
                 method: 'POST',
@@ -265,6 +260,7 @@
                 document.getElementById(countries[country]).innerHTML = content;
             });
 
+            // לאחר קבלת הנתונים, הצג את התוכן
             document.getElementById("people-container").style.display = "flex";
         }
 
@@ -275,8 +271,8 @@
                         <strong>${person[2]}</strong>
                     </div>
                     <div class="person-info">
-                        <p><strong>סכום:</strong> ${formatNumber(person[3])} ₪</p>
-                        <p><strong>יעד:</strong> ${formatNumber(person[4])} ₪</p>
+                        <span class="amount"><strong>סכום:</strong> ${formatNumber(person[3])} ₪</span>
+                        <span class="target"><strong>יעד:</strong> ${formatNumber(person[4])} ₪</span>
                     </div>
                     ${generateProgressBar(person[3], person[4])}
                 </div>
@@ -289,10 +285,9 @@
             }
 
             const progressWidth = (amount / target) * 100;
-            const barWidth = 250;  // רוחב קבוע של הבר (300 פיקסלים)
 
             return `
-                <div class="progress-bar" style="width: ${barWidth}px;">
+                <div class="progress-bar">
                     <div class="progress" style="width: ${Math.min(progressWidth, 100)}%;"></div>
                 </div>
                 <div class="progress-text">${formatNumber(amount)} ₪ מתוך ${formatNumber(target)} ₪ (${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג)</div>
@@ -312,7 +307,6 @@
             const globalTarget = 150000;
             const progressWidth = (globalTotal / globalTarget) * 100;
 
-            // בדוק אם האלמנטים קיימים לפני שמבצע את העדכון
             const globalProgressElement = document.getElementById("global-progress");
             const globalProgressTextElement = document.getElementById("global-progress-text");
             const globalProgressPercentageElement = document.getElementById("global-progress-percentage");
