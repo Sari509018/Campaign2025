@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Heebo&display=swap" rel="stylesheet">
     <style>
         body {
+            background-color: #020308;
             font-family: 'Heebo', sans-serif;
             background: url('/mnt/data/Untitled-1 (1).jpg') no-repeat center center fixed;
             background-size: cover;
@@ -268,24 +269,26 @@
             `).join('');
         }
 
-        function generateProgressBar(amount, target) {
-            if (!target || target === 0) {
-                return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
-            }
+function generateProgressBar(amount, target) {
+    if (!target || target === 0) {
+        return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
+    }
 
-            const progressWidth = (amount / target) * 100;
-            const maxBarWidth = 300;  // Width of the bar when the target is the largest.
+    const progressWidth = (amount / target) * 100;
+    const minBarWidth = 1000;  // רוחב מינימלי של הבר (1000 פיקסלים)
+    const maxBarWidth = 50000; // רוחב מקסימלי של הבר (50000 פיקסלים)
 
-            // Calculate the proportional width based on the target
-            const barWidth = (target / 150000) * maxBarWidth;
+    // חישוב רוחב הבר על פי היעד, כך שהרוחב יהיה בין 1000 ל-50000
+    const barWidth = Math.min(minBarWidth + (target / 50000) * (maxBarWidth - minBarWidth), maxBarWidth);
 
-            return `
-                <div class="progress-bar" style="width: ${barWidth}px;">
-                    <div class="progress" style="width: ${Math.min(progressWidth, 100)}%"></div>
-                </div>
-                <div class="progress-text">${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג</div>
-            `;
-        }
+    return `
+        <div class="progress-bar" style="width: ${barWidth}px;">
+            <div class="progress" style="width: ${Math.min(progressWidth, 100)}%"></div>
+        </div>
+        <div class="progress-text">${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג</div>
+    `;
+}
+
 
         function updateGlobalProgress(data) {
             globalTotal = data.reduce((acc, person) => {
