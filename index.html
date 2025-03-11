@@ -187,7 +187,7 @@
             const progressWidth = (amount / target) * 100;
             return `
                 <div class="progress-bar">
-                    <div class="progress" style="width: ${progressWidth}%"></div>
+                    <div class="progress" style="width: ${Math.min(progressWidth, 100)}%"></div>
                 </div>
             `;
         }
