@@ -96,15 +96,9 @@
         <div id="loading">טוען...</div>
 
         <div id="people-container">
-            <div id="us-people" class="people-column">
-                <h3>אנשים מארצות הברית</h3>
-            </div>
-            <div id="france-people" class="people-column">
-                <h3>אנשים מצרפת</h3>
-            </div>
-            <div id="china-people" class="people-column">
-                <h3>אנשים מסין</h3>
-            </div>
+            <div id="us-people" class="people-column"></div>
+            <div id="france-people" class="people-column"></div>
+            <div id="china-people" class="people-column"></div>
         </div>
     </div>
 
@@ -131,14 +125,30 @@
         }
 
         function displayPeople(data) {
-            const usPeople = data.filter(person => person[0] === "USA");
-            const francePeople = data.filter(person => person[0] === "FRANCE");
-            const chinaPeople = data.filter(person => person[0] === "CHINA");
+            const countries = {
+                "USA": "us-people",
+                "FRANCE": "france-people",
+                "CHINA": "china-people"
+            };
 
-            document.getElementById("us-people").innerHTML += generatePeopleHTML(usPeople);
-            document.getElementById("france-people").innerHTML += generatePeopleHTML(francePeople);
-            document.getElementById("china-people").innerHTML += generatePeopleHTML(chinaPeople);
-
+            Object.keys(countries).forEach(country => {
+                const people = data.filter(person => person[0] === country);
+                const totalAmount = people.find(person => person[1] === 0);
+                const target = 10000; // יעד לדוגמה
+                let content = "";
+                
+                if (people.length > 0) {
+                    content += `<h3>אנשים מ${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
+                    if (totalAmount) {
+                        const percentage = ((totalAmount[3] / target) * 100).toFixed(2);
+                        content += `<h4>סכום כולל: ${totalAmount[3]} ₪ (${percentage}% מתוך ${target} ₪)</h4>`;
+                    }
+                    content += generatePeopleHTML(people.filter(person => person[1] !== 0));
+                }
+                
+                document.getElementById(countries[country]).innerHTML = content;
+            });
+            
             document.getElementById("people-container").style.display = "flex";
         }
 
