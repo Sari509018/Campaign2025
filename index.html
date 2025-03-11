@@ -17,8 +17,22 @@
             text-align: center;
             margin: 0;
             padding: 0;
+            position: relative;
+            z-index: 1;
         }
 
+        .bg-logo {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: url('logo.png') no-repeat center center;
+          background-size: contain;
+          opacity: 0.1; /* שקיפות נמוכה כדי שהלוגו לא יפריע לתוכן */
+          z-index: -1;
+        }
+        
         #rashi {
             font-family: 'Noto Rashi Hebrew', sans-serif;
             font-size: 32px;
@@ -42,7 +56,7 @@
         }
 
         #fetch-button:hover {
-            background-color: grey;
+            background-color: #4a6a93;
         }
 
         #loading {
@@ -68,15 +82,14 @@
         .people-column h3 {
             color: white;
             font-size: 24px;
-            margin-bottom: 10px;
         }
         
     .person {
         background-color: #4a6a93; /* צבע הרקע החדש */
-        padding: 15px;
+        padding: 5px;
         margin: 10px;
         border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 0px 10px #4a6a93;
         width: 100%;
         text-align: center;
         color: black; /* שים לב גם לשנות את צבע הטקסט ל"לבן" כדי שיהיה קריא על הרקע החדש */
@@ -169,6 +182,7 @@
     </style>
 </head>
 <body>
+    <div class="bg-logo"></div>
     <p id="rashi">"ישיבת באר התלמוד בויאר פורים תשפ"ה"</p>
     <div id="content-wrapper">
         <div class="header">
