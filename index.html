@@ -203,7 +203,7 @@
                     <p><strong>שם:</strong> ${person[2]}</p>
                     <p><strong>מספר זיהוי:</strong> ${person[1]}</p>
                     <p><strong>סכום:</strong> ${person[3]} ₪</p>
-                    ${generateProgressBar(person[3], target)}
+                    ${generateProgressBar(person[3], person[4])}
                 </div>
             `).join('');
         }
