@@ -203,11 +203,14 @@
     
     // הפונקציה שמופעלת בלחיצה על הכפתור הראשוני
     function startFetching() {
+          console.log("startFetching called");
+
       document.getElementById("loading").style.display = "block";
       document.getElementById("initial-state").style.display = "none";
   document.getElementById("logo-container").style.display = "none";
   fetchPeople();
 }
+
 
     
     function fetchPeople() {
@@ -230,9 +233,6 @@
   console.error("Error fetching data:", error);
   document.getElementById("loading").innerText = "שגיאה בטעינת המידע";
 });
-
-      });
-    }
     
     function displayPeople(data) {
       const countries = {
