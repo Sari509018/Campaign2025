@@ -18,29 +18,13 @@
       margin: 0;
       padding: 0;
     }
-#initial-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-#logo-container {
-  cursor: pointer;
-}
-#logo {
-  height: 150px;
-}
-/* הלוגו קבוע בצד ימין למעלה לאחר הטעינה */
-#fixed-logo {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  height: 150px;
-  cursor: pointer;
-  display: none;
-}
-    #logo-container {
-      text-align: left;
+    /* מצב אתחולי – רק כפתור גדול במרכז הדף */
+    #initial-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color:white
     }
     #start-button {
       background: none;
@@ -74,6 +58,12 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
+    }
+    #logo-container {
+      text-align: left;
+    }
+    #logo {
+      height: 50px;
     }
     .header-text {
       font-size: 30px;
@@ -165,27 +155,28 @@
 </head>
 <body>
   <!-- מצב אתחולי: מוצג רק כפתור רענון גדול במרכז -->
-<div id="initial-state">
-  <div id="logo-container" onclick="startFetching()">
-    <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
+  <div id="initial-state">
+    <button id="start-button" onclick="startFetching()">
+רענן נתונים
+    </button>
   </div>
-    <div id="loading">נטען...</div>
-</div>
-
-
+  
   <!-- הודעת טעינה -->
-
+  <div id="loading">נטען...</div>
   
   <!-- תוכן ראשי – יופיע לאחר טעינת הנתונים -->
   <div id="content-wrapper">
     <div id="header">
       <div id="logo-container">
         <!-- עדכני את הנתיב לקובץ הלוגו שלך -->
-        <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo" onclick="fetchPeople()">
+        <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
       </div>
       <div class="header-text">
         נאסף עד כה: <span id="global-progress-text">0</span>150,000 מתוך (<span id="global-progress-percentage">0%</span>)
       </div>
+      <button id="refresh-button" style="color:white" onclick="fetchPeople()" aria-label="רענון">
+🌍
+      </button>
     </div>
     <div class="global-progress-bar">
       <div id="global-progress" class="global-progress" style="width: 0%;"></div>
@@ -203,14 +194,10 @@
     
     // הפונקציה שמופעלת בלחיצה על הכפתור הראשוני
     function startFetching() {
-          console.log("startFetching called");
-
-      document.getElementById("loading").style.display = "block";
       document.getElementById("initial-state").style.display = "none";
-  document.getElementById("logo-container").style.display = "none";
-  fetchPeople();
-}
-      window.startFetching = startFetching;
+      document.getElementById("loading").style.display = "block";
+      fetchPeople();
+    }
     
     function fetchPeople() {
       fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
@@ -220,19 +207,18 @@
       })
       .then(response => response.json())
       .then(data => {
-
-  document.getElementById("loading").style.display = "none";
-  document.getElementById("initial-state").style.display = "none";
-  document.getElementById("content-wrapper").style.display = "block";
-  document.getElementById("fixed-logo").style.display = "block";
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("content-wrapper").style.display = "block";
         displayPeople(data);
         updateGlobalProgress(data);
-      });
+      })
       .catch(error => {
-  console.error("Error fetching data:", error);
-  document.getElementById("loading").innerText = "שגיאה בטעינת המידע";
-});
+        console.error("Error fetching data:", error);
+        document.getElementById("loading").style.display = "none";
+        alert("שגיאה בטעינת המידע");
+      });
     }
+    
     function displayPeople(data) {
       const countries = {
         "USA": "us-people",
@@ -261,11 +247,11 @@
         let content = "";
         let totalAmount = 0;
         if (people.length > 0) {
-          content += `<h3>${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
+          content += <h3>${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>;
           if (country === "USA") totalAmount = parseInt(usaData) || 0;
           if (country === "FRANCE") totalAmount = parseInt(franceData) || 0;
           if (country === "CHINA") totalAmount = parseInt(chinaData) || 0;
-          content += `<h4>סכום כולל: ${formatNumber(totalAmount)} ₪</h4>`;
+          content += <h4>סכום כולל: ${formatNumber(totalAmount)} ₪</h4>;
           content += generatePeopleHTML(people.filter(person => person[1] !== "0"));
         }
         document.getElementById(countries[country]).innerHTML = content;
@@ -276,7 +262,7 @@
     
     function generatePeopleHTML(people) {
       return people.map(person => {
-        return `
+        return 
           <div class="person">
             <div class="person-name"><strong>${person[2]}</strong></div>
             <div class="person-info">
@@ -285,21 +271,21 @@
             </div>
             ${generateProgressBar(person[3], person[4])}
           </div>
-        `;
+        ;
       }).join('');
     }
     
     function generateProgressBar(amount, target) {
       if (!target || target == 0) {
-        return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
+        return <div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>;
       }
       const progressWidth = (amount / target) * 100;
-      return `
+      return 
         <div class="progress-bar">
           <div class="progress" style="width: ${Math.min(progressWidth, 100)}%;"></div>
         </div>
         <div class="progress-text">${formatNumber(amount)} ₪ מתוך ${formatNumber(target)} ₪ (${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג)</div>
-      `;
+      ;
     }
     
     function formatNumber(number) {
@@ -311,8 +297,8 @@
       const totalAll = parseInt(allData) || 0;
       const progressWidth = (totalAll / globalTarget) * 100;
       document.getElementById("global-progress-text").innerText = formatNumber(totalAll) + " ₪";
-      document.getElementById("global-progress-percentage").innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
-      document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
+      document.getElementById("global-progress-percentage").innerText = ${Math.min(progressWidth, 100).toFixed(2)}%;
+      document.getElementById("global-progress").style.width = ${Math.min(progressWidth, 100)}%;
     }
 
   </script>
