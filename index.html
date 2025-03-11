@@ -64,6 +64,12 @@
             width: 30%;
         }
 
+        .people-column h3 {
+            color: black;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
         .person {
             background-color: white;
             padding: 15px;
@@ -90,9 +96,15 @@
         <div id="loading">טוען...</div>
 
         <div id="people-container">
-            <div id="us-people" class="people-column"></div>
-            <div id="france-people" class="people-column"></div>
-            <div id="china-people" class="people-column"></div>
+            <div id="us-people" class="people-column">
+                <h3>אנשים מארצות הברית</h3>
+            </div>
+            <div id="france-people" class="people-column">
+                <h3>אנשים מצרפת</h3>
+            </div>
+            <div id="china-people" class="people-column">
+                <h3>אנשים מסין</h3>
+            </div>
         </div>
     </div>
 
@@ -123,9 +135,9 @@
             const francePeople = data.filter(person => person[0] === "FRANCE");
             const chinaPeople = data.filter(person => person[0] === "CHINA");
 
-            document.getElementById("us-people").innerHTML = generatePeopleHTML(usPeople);
-            document.getElementById("france-people").innerHTML = generatePeopleHTML(francePeople);
-            document.getElementById("china-people").innerHTML = generatePeopleHTML(chinaPeople);
+            document.getElementById("us-people").innerHTML += generatePeopleHTML(usPeople);
+            document.getElementById("france-people").innerHTML += generatePeopleHTML(francePeople);
+            document.getElementById("china-people").innerHTML += generatePeopleHTML(chinaPeople);
 
             document.getElementById("people-container").style.display = "flex";
         }
