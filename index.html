@@ -7,7 +7,73 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Rashi+Hebrew&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Heebo&display=swap" rel="stylesheet">
     <style>
-        /* כל הסגנונות הקיימים */
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: #f9f9f9;
+            direction: rtl;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        #rashi {
+            font-family: 'Noto Rashi Hebrew', sans-serif;
+            font-size: 32px;
+            color: #f1a349;
+            margin-top: 20px;
+        }
+
+        #content-wrapper {
+            padding: 20px;
+        }
+
+        #fetch-button {
+            background-color: #f1a349;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        #fetch-button:hover {
+            background-color: #d88a2f;
+        }
+
+        #loading {
+            font-size: 20px;
+            color: #f1a349;
+            display: none;
+        }
+
+        #people-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        h3 {
+            color: #2d2d2d;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .person {
+            background-color: #fff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .person p {
+            margin: 5px 0;
+        }
+
+        .person strong {
+            color: #f1a349;
+        }
     </style>
 </head>
 <body>
@@ -17,7 +83,7 @@
         <div id="loading">טוען...</div>
 
         <!-- Container for displaying people information -->
-        <div id="people-container" style="display:none;">
+        <div id="people-container">
             <h3>אנשים מארצות הברית:</h3>
             <div id="us-people"></div>
 
@@ -33,7 +99,7 @@
         // פונקציה לשליחה ל-Webhook ולקבלת נתונים
         function fetchPeople() {
             const loadingElement = document.getElementById("loading");
-            loadingElement.style.display = "block";
+            loadingElement.style.display = "block";  // הצג את הודעת הטעינה
 
             // שלח בקשה ל-Webhook שלך
             fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
