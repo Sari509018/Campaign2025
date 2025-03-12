@@ -27,17 +27,13 @@
        color:white
      }
      #start-button {
-       background: none;
-       border: none;
+
+     }
+     #start-button {
        cursor: pointer;
+       height: 150px;
      }
-     #start-button svg {
-       fill: white;
-       backgroud-color: white;
-       width: 60px;
-       height: 60px;
-     }
-     #start-button:hover svg {
+     #start-button:hover {
        fill: grey;
      }
      /* הודעת טעינה */
@@ -151,14 +147,19 @@
        color: black;
        margin-top: 5px;
      }
+         .progress-text2 {
+       font-size: 8px;
+       color: black;
+       margin-top: 5px;
+     }
    </style>
  </head>
  <body>
    <!-- מצב אתחולי: מוצג רק כפתור רענון גדול במרכז -->
    <div id="initial-state">
-     <button id="start-button" onclick="startFetching()">
- רענן נתונים
-     </button>
+<div id="logo-button" onclick="startFetching()">
+  <img src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo" style="width: 150px; height: 150px;">
+</div>
    </div>
  
    <!-- הודעת טעינה -->
@@ -172,7 +173,9 @@
          <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
        </div>
        <div class="header-text">
-         נאסף עד כה: <span id="global-progress-text">0</span>150,000 מתוך (<span id="global-progress-percentage">0%</span>)
+         נאסף עד כה: <span id="global-progress-text">0</span> 
+        מתוך<span id="global-pregress-text2">150000</span>
+        (<span id="global-progress-percentage">0%</span>)
        </div>
        <button id="refresh-button" style="color:white" onclick="fetchPeople()" aria-label="רענון">
  🌍
@@ -297,6 +300,7 @@
        const totalAll = parseInt(allData) || 0;
        const progressWidth = (totalAll / globalTarget) * 100;
        document.getElementById("global-progress-text").innerText = formatNumber(totalAll) + " ₪";
+              document.getElementById("global-progress-text2").innerText = formatNumber(totalAll) + " ₪";
        document.getElementById("global-progress-percentage").innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
        document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
      }
