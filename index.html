@@ -21,6 +21,7 @@
      /* מצב אתחולי – רק כפתור גדול במרכז הדף */
      #initial-state {
        display: flex;
+       align-items: center;
        justify-content: center;
        height: 100vh;
        color:white
@@ -195,7 +196,7 @@
      // הפונקציה שמופעלת בלחיצה על הכפתור הראשוני
      function startFetching() {
        document.getElementById("initial-state").style.display = "none";
-       document.getElementById("loading").style.display = "block";
+       document.getElementById("loading").style.display = "flex";
        fetchPeople();
      }
  
