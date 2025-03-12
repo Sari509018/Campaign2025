@@ -24,6 +24,7 @@
        align-items: center;
        justify-content: center;
        height: 100vh;
+       color:white
      }
      #start-button {
        background: none;
@@ -32,6 +33,7 @@
      }
      #start-button svg {
        fill: white;
+       backgroud-color: white;
        width: 60px;
        height: 60px;
      }
@@ -42,7 +44,7 @@
      #loading {
        display: none;
        font-size: 20px;
-       color: black;
+       color: white;
        margin-top: 20px;
      }
      /* תוכן ראשי – מוסתר בהתחלה */
@@ -90,7 +92,7 @@
      }
      .global-progress {
        height: 100%;
-       background-color: green;
+       background-color: #fdc344;
        border-radius: 5px;
      }
      /* מיכל הקבוצות */
@@ -111,10 +113,10 @@
      }
      .person {
        background-color: #4a6a93;
-       padding: 15px;
+       padding: 5px;
        margin: 10px;
        border-radius: 5px;
-       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+       box-shadow: 0 0px 7px #4a6a93;
        width: 100%;
        text-align: center;
        color: white;
@@ -133,15 +135,15 @@
        width: 45%;
      }
      .progress-bar {
-       width: 100%;
+       width: 90%;
        background-color: #f0f0f0;
        border-radius: 5px;
-       height: 20px;
+       height: 15px;
        margin-top: 10px;
      }
      .progress {
        height: 100%;
-       background-color: green;
+       background-color: #fdc344;
        border-radius: 5px;
      }
      .progress-text {
@@ -154,10 +156,8 @@
  <body>
    <!-- מצב אתחולי: מוצג רק כפתור רענון גדול במרכז -->
    <div id="initial-state">
-     <button id="start-button" onclick="startFetching()" aria-label="רענן">
-       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 1 .908-.418A4 4 0 1 0 8 4V1.5a.5.5 0 0 1 1 0V4a.5.5 0 0 1-.5.5H5a.5.5 0 0 1 0-1h3z"/>
-       </svg>
+     <button id="start-button" onclick="startFetching()">
+ רענן נתונים
      </button>
    </div>
  
@@ -169,12 +169,12 @@
      <div id="header">
        <div id="logo-container">
          <!-- עדכני את הנתיב לקובץ הלוגו שלך -->
-         <img id="logo" src="images/logo.png" alt="Logo">
+         <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
        </div>
        <div class="header-text">
-         נאסף עד כה: <span id="global-progress-text">0</span> מתוך 150000 (<span id="global-progress-percentage">0%</span>)
+         נאסף עד כה: <span id="global-progress-text">0</span>150,000 מתוך (<span id="global-progress-percentage">0%</span>)
        </div>
-       <button id="refresh-button" onclick="fetchPeople()" aria-label="רענון">
+       <button id="refresh-button" style="color:white" onclick="fetchPeople()" aria-label="רענון">
  🌍
        </button>
      </div>
@@ -194,11 +194,8 @@
  
      // הפונקציה שמופעלת בלחיצה על הכפתור הראשוני
      function startFetching() {
-       // הסתר מצב האתחול
        document.getElementById("initial-state").style.display = "none";
-       // הצג הודעת טעינה
        document.getElementById("loading").style.display = "block";
-       // הפעל את בקשת הנתונים
        fetchPeople();
      }
  
@@ -210,9 +207,7 @@
        })
        .then(response => response.json())
        .then(data => {
-         // הסתר הודעת טעינה
          document.getElementById("loading").style.display = "none";
-         // הצג את התוכן הראשי
          document.getElementById("content-wrapper").style.display = "block";
          displayPeople(data);
          updateGlobalProgress(data);
@@ -231,12 +226,11 @@
          "CHINA": "china-people"
        };
  
-
        // מציאת שורת הסיכום (כאשר הפריט הראשון הוא "0")
        const summaryData = data.find(item => item[0] === "0");
        let usaData = "", franceData = "", chinaData = "";
        if (summaryData) {
-         const parts = summaryData[1].split(' ');
+         const parts = summaryData[1].split('|');
          parts.forEach(part => {
            let [key, value] = part.split('=');
            key = key.trim();
@@ -254,7 +248,6 @@
          let totalAmount = 0;
          if (people.length > 0) {
            content += `<h3>${country === "USA" ? "ארצות הברית" : country === "FRANCE" ? "צרפת" : "סין"}</h3>`;
-           
            if (country === "USA") totalAmount = parseInt(usaData) || 0;
            if (country === "FRANCE") totalAmount = parseInt(franceData) || 0;
            if (country === "CHINA") totalAmount = parseInt(chinaData) || 0;
@@ -299,14 +292,15 @@
        return parseInt(number).toLocaleString('en');
      }
  
-     function updateGlobalProgress(data) {
+      function updateGlobalProgress(data) {
        const globalTarget = 150000;
        const totalAll = parseInt(allData) || 0;
        const progressWidth = (totalAll / globalTarget) * 100;
-       document.getElementById("global-progress-text").innerText = formatNumber(totalAll);
+       document.getElementById("global-progress-text").innerText = formatNumber(totalAll) + " ₪";
        document.getElementById("global-progress-percentage").innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
        document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
      }
+ 
    </script>
  </body>
  </html>
