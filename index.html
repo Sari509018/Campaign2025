@@ -170,9 +170,13 @@
          <!-- עדכני את הנתיב לקובץ הלוגו שלך -->
          <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo" onclick="fetchPeople()">
        </div>
-       <div class="header-text">
-         נאסף עד כה: <span id="global-progress-text">0</span>150,000 מתוך (<span id="global-progress-percentage">0%</span>)
+
+      <div class="header-text">
+         נאסף עד כה: <span id="global-progress-text">0 ₪</span>  
+         מתוך <span id="global-progress-target">150,000 ₪</span>  
+         (<span id="global-progress-percentage">0%</span>)
        </div>
+      
      </div>
      <div class="global-progress-bar">
        <div id="global-progress" class="global-progress" style="width: 0%;"></div>
@@ -293,10 +297,14 @@
        const totalAll = parseInt(allData) || 0;
        const progressWidth = (totalAll / globalTarget) * 100;
        document.getElementById("global-progress-text").innerText = formatNumber(totalAll) + " ₪";
+         document.getElementById("global-progress-target").innerText = formatNumber(globalTarget) + " ₪";
        document.getElementById("global-progress-percentage").innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
        document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
      }
- 
+
+
+
+
    </script>
  </body>
  </html>
