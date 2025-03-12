@@ -19,6 +19,7 @@
        padding: 0;
      }
      /* מצב אתחולי – רק כפתור גדול במרכז הדף */
+     /* מצב אתחולי – רק הלוגו במרכז הדף */
      #initial-state {
        display: flex;
        align-items: center;
@@ -29,6 +30,7 @@
      #start-button {
        background: none;
        border: none;
+     #logo-button {
        cursor: pointer;
      }
      #start-button svg {
@@ -39,6 +41,8 @@
      }
      #start-button:hover svg {
        fill: grey;
+     #logo-button img {
+       height: 120px;
      }
      /* הודעת טעינה */
      #loading {
@@ -53,6 +57,7 @@
        padding: 20px;
      }
      /* Header – כולל הלוגו, הכותרת עם הנתונים, וכפתור רענון */
+     /* Header */
      #header {
        display: flex;
        justify-content: space-between;
@@ -83,6 +88,7 @@
      #refresh-button:hover svg {
        fill: grey;
      }
+     /* פס התקדמות */
      .global-progress-bar {
        width: 100%;
        background-color: #f0f0f0;
@@ -151,32 +157,90 @@
        color: black;
        margin-top: 5px;
      }
+
+      ////////////
+      #logo-button {
+      cursor: pointer;
+    }
+    #logo-button img {
+      height: 120px;
+    }
+    #loading {
+      display: none;
+      font-size: 20px;
+      color: white;
+      margin-top: 20px;
+    }
+    #content-wrapper {
+      display: none;
+      padding: 20px;
+    }
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 10px;
+    }
+    #logo-container {
+      text-align: right;
+      cursor: pointer;
+    }
+    #logo {
+      height: 50px;
+    }
+    .header-text {
+      font-size: 30px;
+      color: white;
+    }
+    .sub-header-text {
+      font-size: 16px;
+      color: white;
+    }
+    .global-progress-bar {
+      width: 100%;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      height: 30px;
+      margin-top: 20px;
+    }
+    .global-progress {
+      height: 100%;
+      background-color: #fdc344;
+      border-radius: 5px;
+    }
    </style>
  </head>
  <body>
    <!-- מצב אתחולי: מוצג רק כפתור רענון גדול במרכז -->
    <div id="initial-state">
      <button id="start-button" onclick="startFetching()">
- רענן נתונים
+      <img src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
      </button>
+     <div id="logo-button" onclick="startFetching()">
+       <img src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
+     </div>
    </div>
  
+  
    <!-- הודעת טעינה -->
    <div id="loading">נטען...</div>
- 
+   
    <!-- תוכן ראשי – יופיע לאחר טעינת הנתונים -->
    <div id="content-wrapper">
+   <div id="content-wrapper" style="display: none;">
      <div id="header">
        <div id="logo-container">
          <!-- עדכני את הנתיב לקובץ הלוגו שלך -->
          <img id="logo" src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
+       <div id="logo-button" onclick="fetchPeople()">
+         <img src="https://1drv.ms/i/c/e5a7cb55ec96710f/IQSdb7atOWWMTZsILGE-SkXnASj-z4532-tWziRrJg2IE38?width=1024" alt="Logo">
        </div>
-       <div class="header-text">
-         נאסף עד כה: <span id="global-progress-text">0</span>150,000 מתוך (<span id="global-progress-percentage">0%</span>)
-       </div>
-       <button id="refresh-button" style="color:white" onclick="fetchPeople()" aria-label="רענון">
- 🌍
-       </button>
+          <div>
+        <div class="header-text">נאסף עד כה: <span id="global-progress-text">0</span> ₪</div>
+        <div class="sub-header-text">מתוך 150,000 ₪</div>
+      </div>
+        
      </div>
      <div class="global-progress-bar">
        <div id="global-progress" class="global-progress" style="width: 0%;"></div>
@@ -187,18 +251,18 @@
        <div id="china-people" class="people-column"></div>
      </div>
    </div>
- 
-   <script>
+    </div>
+
+    <script>
      // משתנה לשמירת ערך ALL מתוך שורת הסיכום
      let allData = "0";
- 
+     
      // הפונקציה שמופעלת בלחיצה על הכפתור הראשוני
      function startFetching() {
        document.getElementById("initial-state").style.display = "none";
        document.getElementById("loading").style.display = "block";
        fetchPeople();
      }
- 
      function fetchPeople() {
        fetch('https://hook.eu2.make.com/utretx4h3a1757e9s6v99ldn72gfu72u', {
          method: 'POST',
@@ -218,14 +282,14 @@
          alert("שגיאה בטעינת המידע");
        });
      }
- 
+
      function displayPeople(data) {
        const countries = {
          "USA": "us-people",
          "FRANCE": "france-people",
          "CHINA": "china-people"
        };
- 
+       
        // מציאת שורת הסיכום (כאשר הפריט הראשון הוא "0")
        const summaryData = data.find(item => item[0] === "0");
        let usaData = "", franceData = "", chinaData = "";
@@ -241,7 +305,7 @@
            else if (key === "ALL") { allData = value; }
          });
        }
- 
+       
        Object.keys(countries).forEach(country => {
          const people = data.filter(person => person[0] === country);
          let content = "";
@@ -256,10 +320,10 @@
          }
          document.getElementById(countries[country]).innerHTML = content;
        });
- 
+       
        document.getElementById("people-container").style.display = "flex";
      }
- 
+     
      function generatePeopleHTML(people) {
        return people.map(person => {
          return `
@@ -274,7 +338,7 @@
          `;
        }).join('');
      }
- 
+     
      function generateProgressBar(amount, target) {
        if (!target || target == 0) {
          return `<div class="progress-bar"><div class="progress" style="width: 0%"></div></div><div class="progress-text">לא הוגדר יעד</div>`;
@@ -287,12 +351,12 @@
          <div class="progress-text">${formatNumber(amount)} ₪ מתוך ${formatNumber(target)} ₪ (${Math.min(progressWidth, 100).toFixed(2)}% מהיעד הושג)</div>
        `;
      }
- 
+     
      function formatNumber(number) {
        return parseInt(number).toLocaleString('en');
      }
- 
-      function updateGlobalProgress(data) {
+     
+     function updateGlobalProgress(data) {
        const globalTarget = 150000;
        const totalAll = parseInt(allData) || 0;
        const progressWidth = (totalAll / globalTarget) * 100;
@@ -300,7 +364,6 @@
        document.getElementById("global-progress-percentage").innerText = `${Math.min(progressWidth, 100).toFixed(2)}%`;
        document.getElementById("global-progress").style.width = `${Math.min(progressWidth, 100)}%`;
      }
- 
-   </script>
+    </script>
  </body>
  </html>
